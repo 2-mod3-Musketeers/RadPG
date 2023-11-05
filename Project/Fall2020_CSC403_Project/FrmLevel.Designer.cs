@@ -36,8 +36,12 @@ namespace Fall2020_CSC403_Project {
             this.BlackSquare = new System.Windows.Forms.PictureBox();
             this.InvPicButton = new System.Windows.Forms.PictureBox();
             this.MainMenuButton = new System.Windows.Forms.Button();
+            this.TravelLabel = new System.Windows.Forms.Label();
+            this.SignPanel = new System.Windows.Forms.Panel();
+            this.TravelButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.BlackSquare)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.InvPicButton)).BeginInit();
+            this.SignPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblInGameTime
@@ -49,7 +53,7 @@ namespace Fall2020_CSC403_Project {
             this.lblInGameTime.Location = new System.Drawing.Point(16, 11);
             this.lblInGameTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblInGameTime.Name = "lblInGameTime";
-            this.lblInGameTime.Size = new System.Drawing.Size(60, 24);
+            this.lblInGameTime.Size = new System.Drawing.Size(46, 18);
             this.lblInGameTime.TabIndex = 2;
             this.lblInGameTime.Text = "label1";
             // 
@@ -72,7 +76,7 @@ namespace Fall2020_CSC403_Project {
             this.GameOverText.ForeColor = System.Drawing.Color.Red;
             this.GameOverText.Location = new System.Drawing.Point(285, 87);
             this.GameOverText.Name = "GameOverText";
-            this.GameOverText.Size = new System.Drawing.Size(568, 134);
+            this.GameOverText.Size = new System.Drawing.Size(454, 106);
             this.GameOverText.TabIndex = 21;
             this.GameOverText.Text = "You Died";
             this.GameOverText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -148,13 +152,58 @@ namespace Fall2020_CSC403_Project {
             this.MainMenuButton.Visible = false;
             this.MainMenuButton.Click += new System.EventHandler(this.MainMenuButton_Click);
             // 
+            // TravelLabel
+            // 
+            this.TravelLabel.BackColor = System.Drawing.Color.Transparent;
+            this.TravelLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.TravelLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 120F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TravelLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.TravelLabel.Location = new System.Drawing.Point(10, 20);
+            this.TravelLabel.Name = "TravelLabel";
+            this.TravelLabel.Size = new System.Drawing.Size(584, 106);
+            this.TravelLabel.TabIndex = 30;
+            this.TravelLabel.Text = "Nowhere";
+            this.TravelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // SignPanel
+            // 
+            this.SignPanel.BackColor = System.Drawing.Color.Transparent;
+            this.SignPanel.BackgroundImage = global::Fall2020_CSC403_Project.Properties.Resources.travel_sign;
+            this.SignPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.SignPanel.Controls.Add(this.TravelLabel);
+            this.SignPanel.Controls.Add(this.TravelButton);
+            this.SignPanel.Location = new System.Drawing.Point(293, 248);
+            this.SignPanel.Name = "SignPanel";
+            this.SignPanel.Padding = new System.Windows.Forms.Padding(10, 20, 10, 10);
+            this.SignPanel.Size = new System.Drawing.Size(604, 246);
+            this.SignPanel.TabIndex = 31;
+            this.SignPanel.Visible = false;
+            // 
+            // TravelButton
+            // 
+            this.TravelButton.AutoSize = true;
+            this.TravelButton.BackColor = System.Drawing.Color.SandyBrown;
+            this.TravelButton.Enabled = false;
+            this.TravelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.TravelButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 120F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TravelButton.Location = new System.Drawing.Point(176, 156);
+            this.TravelButton.Margin = new System.Windows.Forms.Padding(50, 10, 50, 200);
+            this.TravelButton.Name = "TravelButton";
+            this.TravelButton.Size = new System.Drawing.Size(428, 154);
+            this.TravelButton.TabIndex = 28;
+            this.TravelButton.Text = "Travel";
+            this.TravelButton.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
+            this.TravelButton.UseVisualStyleBackColor = false;
+            this.TravelButton.Click += new System.EventHandler(this.TravelButton_Click);
+            // 
             // FrmLevel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DimGray;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1395, 840);
+            this.ClientSize = new System.Drawing.Size(1743, 1050);
+            this.Controls.Add(this.SignPanel);
             this.Controls.Add(this.MainMenuButton);
             this.Controls.Add(this.InvPicButton);
             this.Controls.Add(this.BlackSquare);
@@ -174,6 +223,8 @@ namespace Fall2020_CSC403_Project {
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FrmLevel_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.BlackSquare)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.InvPicButton)).EndInit();
+            this.SignPanel.ResumeLayout(false);
+            this.SignPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -189,6 +240,9 @@ namespace Fall2020_CSC403_Project {
         private System.Windows.Forms.PictureBox BlackSquare;
         private System.Windows.Forms.PictureBox InvPicButton;
         private System.Windows.Forms.Button MainMenuButton;
+        private System.Windows.Forms.Label TravelLabel;
+        private System.Windows.Forms.Panel SignPanel;
+        private System.Windows.Forms.Button TravelButton;
     }
 }
 

@@ -29,7 +29,7 @@ namespace Fall2020_CSC403_Project.code
 
         public Facing facing { get; set; }
 
-        public Point StartPos { get; private set; }
+        public Point StartPos { get; set; }
 
 
         public enum Facing
@@ -87,31 +87,21 @@ namespace Fall2020_CSC403_Project.code
 			MoveSpeed = new Position(0, 0);
 		}
 
-		public void RemoveEntity()
+		public void HideEntity()
 		{
-            this.LastPosition = Position;;
-            this.Position = new Position(-100, -100);
-            Collider.MovePosition((int)Position.x, (int)Position.y);
+            Collider.Disable();
 			this.Pic.Visible = false;
-            this.Pic.Location = new Point((int)Position.x, (int)Position.y);
-        }
-
-		public void RestoreEntity()
-		{
-			this.Position = LastPosition;
-            this.Pic.Location = new Point((int)Position.x, (int)Position.y);
-            this.LastPosition = Position;
-            Collider.MovePosition((int)Position.x, (int)Position.y);
-			this.Pic.Visible = true;
         }
 
         public void SetEntityPosition(Position pos)
         {
-            this.LastPosition = Position;
+            //this.LastPosition = Position;
             this.Position = pos;
-            Collider.MovePosition((int)Position.x, (int)Position.y);
+            Collider.MovePosition((int)pos.x, (int)pos.y);
             this.Pic.Visible = true;
-            this.Pic.Location = new Point((int)Position.x, (int)Position.y);
+            this.Pic.Location = new Point((int)pos.x, (int)pos.y);
+            Collider.Enable();
+            this.Pic.BringToFront();
         }
 
 

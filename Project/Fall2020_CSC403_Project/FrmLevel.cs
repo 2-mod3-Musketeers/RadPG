@@ -23,11 +23,12 @@ namespace Fall2020_CSC403_Project
 
         public bool gameOver { get; set; }
 
-		private DateTime timeBegin;
-		private FrmBattleScreen frmBattleScreen;
+        private DateTime timeBegin;
+        private FrmBattleScreen frmBattleScreen;
         private FrmInventory frminventory;
 
         private Size itemSize = new Size(50, 50);
+        private Size signSize = new Size(75, 50);
 
         public SoundPlayer gameAudio;
 
@@ -39,6 +40,8 @@ namespace Fall2020_CSC403_Project
         private Thread panningThread;
         private Keys keyDown;
         private bool moving;
+
+        private Direction TravelDirection = Direction.None;
 
         public FrmLevel(Form MainMenu, Player player)
         {
@@ -65,6 +68,23 @@ namespace Fall2020_CSC403_Project
 
         private void FrmLevel_Load(object sender, EventArgs e)
         {
+            this.Areas[0] = new Area("Malek's Mountain", 12, 0.05);
+            this.Areas[1] = new Area("Village Ruins", 901, 0.05);
+            this.Areas[2] = new Area("Buddy Beachfront", 890, 0.05);
+            this.Areas[3] = new Area("Uphill Hill", 789, 0.05);
+            this.Areas[4] = new Area("Plainsfield", 678, 0.05);
+            this.Areas[5] = new Area("Lower Harmony Village", 567, 0.05);
+            this.Areas[6] = new Area("Windy Plateau", 456, 0.05);
+            this.Areas[7] = new Area("Harmony Plains", 345, 0.05);
+            this.Areas[8] = new Area("Harmony Village", 234, 0.05);
+            this.Areas[9] = new Area("Dragon's Lair", 123, 0.2);
+
+            for (int i = 0; i < 9; i++)
+            {
+                setAdjacency(i);
+            }
+
+
             AreaSelect();
 
             InitializeAreaLayout();
@@ -83,6 +103,17 @@ namespace Fall2020_CSC403_Project
 
             //Adding gameAudio here
             this.gameAudio.PlayLooping();
+
+            SignPanel.Size = new Size(Screen.PrimaryScreen.Bounds.Width - 200, Screen.PrimaryScreen.Bounds.Height - 200);
+            SignPanel.Location = new Point(Screen.PrimaryScreen.Bounds.Width / 2 - SignPanel.Width / 2,  50);
+
+            TravelLabel.Size = new Size(SignPanel.Size.Width, SignPanel.Size.Height / 2);
+            TravelLabel.Location = new Point(Screen.PrimaryScreen.Bounds.Width / 2 - TravelLabel.Width / 2 - 100, Screen.PrimaryScreen.Bounds.Height / 2 - TravelLabel.Height / 2 - 50);
+
+            TravelButton.Size = new Size(SignPanel.Size.Width - 200, SignPanel.Size.Height / 4);
+            TravelButton.Location = new Point(Screen.PrimaryScreen.Bounds.Width / 2 - SignPanel.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2);
+
+
         }
 
 
@@ -114,22 +145,6 @@ namespace Fall2020_CSC403_Project
                         moving = true;
                         this.PanOffset.Y -= step;
 
-                        break;
-
-                    case Keys.E:
-                        moving = false;
-                        this.keyDown = Keys.None;
-                        frminventory = FrmInventory.GetInstance(player);
-                        frminventory.Show();
-                        break;
-
-                    case Keys.Escape:
-                        moving = false;
-                        this.keyDown = Keys.None;
-                        FrmSettings frmsettings = new FrmSettings(this);
-                        frmsettings.FormClosed += (s, args) => this.Close(); // Handle closure of FrmLevel to close the application
-                        frmsettings.Show();
-                        this.Hide();
                         break;
 
                     default:
@@ -173,7 +188,15 @@ namespace Fall2020_CSC403_Project
                         }
                     }
                 }
-                
+
+                if (this.Areas[Area].TravelSigns != null)
+                {
+                    foreach (Direction direction in this.Areas[Area].TravelSigns.Keys)
+                    {
+                        Controls.Add(this.Areas[Area].TravelSigns[direction].Pic);
+                    }
+                }
+
 
 
                 if (this.Areas[Area].Walls != null)
@@ -181,7 +204,6 @@ namespace Fall2020_CSC403_Project
                     for (int i = 0; i < this.Areas[Area].Walls.Count; i++)
                     {
                         this.Controls.Add(this.Areas[Area].Walls[i].Pic);
-                        this.Areas[Area].Walls[i].Pic.BringToFront();
                     }
                 }
                 if (this.Areas[Area].Items != null)
@@ -189,7 +211,6 @@ namespace Fall2020_CSC403_Project
                     for (int i = 0; i < this.Areas[Area].Items.Count; i++)
                     {
                         this.Controls.Add(this.Areas[Area].Items[i].Pic);
-                        this.Areas[Area].Items[i].Pic.BringToFront();
                     }
                 }
             }
@@ -200,7 +221,6 @@ namespace Fall2020_CSC403_Project
                 for (int i = 0; i < this.Areas[Area].Enemies.Count; i++)
                 {
                     this.Controls.Add(this.Areas[Area].Enemies[i].Pic);
-                    this.Areas[Area].Enemies[i].Pic.BringToFront();
                 }
             }
 
@@ -208,9 +228,15 @@ namespace Fall2020_CSC403_Project
             if (player != null)
             {
                 this.Controls.Add(player.Pic);
+                player.Pic.BringToFront();
             }
-            player.Pic.BringToFront();
 
+        }
+
+        public void AddItemToScreen(Item item)
+        {
+            Controls.Add(item.Pic);
+            this.Areas[Area].Items.Add(item);
         }
 
         public PictureBox MakePictureBox(Bitmap pic, Point location, Size Size)
@@ -233,6 +259,27 @@ namespace Fall2020_CSC403_Project
         private void FrmLevel_KeyDown(object sender, KeyEventArgs e)
         {
             this.keyDown = e.KeyCode;
+            switch (e.KeyCode)
+            {
+                case Keys.E:
+                    moving = false;
+                    this.keyDown = Keys.None;
+                    frminventory = FrmInventory.GetInstance(player, PanOffset);
+                    frminventory.Show();
+                    break;
+
+                case Keys.Escape:
+                    moving = false;
+                    this.keyDown = Keys.None;
+                    FrmSettings frmsettings = new FrmSettings(this);
+                    frmsettings.FormClosed += (s, args) => this.Close(); // Handle closure of FrmLevel to close the application
+                    frmsettings.Show();
+                    this.Hide();
+                    break;
+
+                default:
+                    break;
+            }
         }
 
 
@@ -264,7 +311,7 @@ namespace Fall2020_CSC403_Project
 
                 for (int i = 0; i < this.Areas[Area].Walls.Count; i++)
                 {
-                    this.Areas[Area].Walls[i].Move(new Point((int)this.Areas[Area].Walls[i].Position.x + (int)this.PanOffset.X, (int)this.Areas[Area].Walls[i].Position.y + (int)this.PanOffset.Y));
+                    this.Areas[Area].Walls[i].Move(new Point((int)this.Areas[Area].Walls[i].Position.X + (int)this.PanOffset.X, (int)this.Areas[Area].Walls[i].Position.Y + (int)this.PanOffset.Y));
                 }
                 this.Invalidate();
             }
@@ -293,8 +340,9 @@ namespace Fall2020_CSC403_Project
             {
                 if (!player.Inventory.BackpackIsFull())
                 {
-                    player.Inventory.AddToBackpack(this.Areas[Area].Items[x]);
-                    this.Areas[Area].Items[x].RemoveEntity();
+                    Item item = this.Areas[this.Area].Items[x];
+                    player.Inventory.AddToBackpack(item);
+                    item.HideEntity();
                 }
 
             }
@@ -305,6 +353,33 @@ namespace Fall2020_CSC403_Project
                 player.SPEED = (int)this.Areas[Area].Terrain.Tiles[x].Effect;
             }
 
+            this.TravelDirection = InASign(player);
+            if (this.TravelDirection != Direction.None)
+            {
+                TravelLabel.Text = this.Areas[this.Area].TravelSigns[this.TravelDirection].Location;
+                TravelButton.Enabled = true;
+                SignPanel.Show();
+                SignPanel.BringToFront();
+
+            }
+            else
+            {
+                SignPanel.Hide();
+                TravelButton.Enabled = false;
+            }
+
+        }
+
+        private Direction InASign(Player you)
+        {
+            foreach (Direction direction in this.Areas[this.Area].TravelSigns.Keys)
+            {
+                if (you.Collider.Intersects(this.Areas[this.Area].TravelSigns[direction].Collider))
+                {
+                    return direction;
+                }
+            }
+            return Direction.None;
         }
 
         private bool HitAWall(Player c)
@@ -381,10 +456,10 @@ namespace Fall2020_CSC403_Project
             frmBattleScreen = FrmBattleScreen.GetInstance(this, enemy);
             frmBattleScreen.Show();
 
-/*            if (enemy.Name == "BossKoolAid")
-            {
-                frmBattleScreen.SetupForBossBattle();
-            }*/
+            /*            if (enemy.Name == "BossKoolAid")
+                        {
+                            frmBattleScreen.SetupForBossBattle();
+                        }*/
         }
 
         public void GameOver()
@@ -394,6 +469,8 @@ namespace Fall2020_CSC403_Project
 
 
             DisposeLevel();
+            DisposeGame();
+
 
 
             // set the location and size of the square 
@@ -446,30 +523,46 @@ namespace Fall2020_CSC403_Project
         private void DisposeLevel()
         {
 
+            foreach (Direction direction in this.Areas[Area].TravelSigns.Keys)
+            {
+                this.Controls.Remove(this.Areas[Area].TravelSigns[direction].Pic);
+            }
 
             for (int i = 0; i < this.Areas[Area].Enemies.Count; i++)
             {
                 this.Controls.Remove(this.Areas[Area].Enemies[i].Pic);
             }
-            this.Areas[Area].Enemies = new List<Enemy> { };
 
 
             //remove terrain here
-            
-            this.Areas[Area].Terrain.Tiles.Clear();
+
             for (int i = 0; i < this.Areas[Area].Items.Count; i++)
             {
                 this.Controls.Remove(this.Areas[Area].Items[i].Pic);
             }
-            this.Areas[Area].Items.Clear();
             for (int i = 0; i < this.Areas[Area].Walls.Count; i++)
             {
                 this.Controls.Remove(this.Areas[Area].Walls[i].Pic);
             }
-            this.Areas[Area].Walls.Clear();
 
+            GC.Collect();
+
+        }
+
+        private void DisposeGame()
+        {
+            for (int i = 0; i < this.Areas.Length; i++)
+            {
+                this.Areas[i].Enemies = new List<Enemy> { };
+                this.Areas[i].TravelSigns.Clear();
+                this.Areas[i].AdjacentAreas.Clear();
+                this.Areas[i].Terrain.Tiles.Clear();
+                this.Areas[i].Items.Clear();
+                this.Areas[i].Walls.Clear();
+            }
             this.Areas = new Area[10];
             GC.Collect();
+
         }
 
 
@@ -480,7 +573,7 @@ namespace Fall2020_CSC403_Project
 
         private void Menu_Click(object sender, EventArgs e)
         {
-            frminventory = FrmInventory.GetInstance(player);
+            frminventory = FrmInventory.GetInstance(player, this.PanOffset);
             frminventory.Show();
         }
 
@@ -488,6 +581,17 @@ namespace Fall2020_CSC403_Project
         private void RestartButton_Click(object sender, EventArgs e)
         {
             gameAudio.PlayLooping();
+
+            this.Areas[0] = new Area("Malek's Mountain", 12, 0.05);
+            this.Areas[1] = new Area("Village Ruins", 901, 0.05);
+            this.Areas[2] = new Area("Buddy Beachfront", 890, 0.05);
+            this.Areas[3] = new Area("Uphill Hill", 789, 0.05);
+            this.Areas[4] = new Area("Plainsfield", 678, 0.05);
+            this.Areas[5] = new Area("Lower Harmony Village", 567, 0.05);
+            this.Areas[6] = new Area("Windy Plateau", 456, 0.05);
+            this.Areas[7] = new Area("Harmony Plains", 345, 0.05);
+            this.Areas[8] = new Area("Harmony Village", 234, 0.05);
+            this.Areas[9] = new Area("Dragon's Lair", 123, 0.2);
 
             this.gameOver = false;
             this.player = new Player(player.Name, player.Pic, player.archetype);
@@ -567,91 +671,70 @@ namespace Fall2020_CSC403_Project
 
         private void AreaBoss()
         {
-            this.Area = 9;
 
-            if (this.Areas[9] != null)
+            if (this.Areas[9].Visited)
             {
                 return;
             }
-
-            this.Areas[4] = new Area(123, 0.2);
-
-            setAdjacency(this.Area);
+            this.Areas[this.Area].Visited = true;
 
 
-            player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - player.Pic.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2 - player.Pic.Height));
+
             player.Pic.Visible = true;
         }
 
         private void Area8()
         {
-            this.Area = 8;
 
-            if (this.Areas[8] != null)
+            if (this.Areas[8].Visited)
             {
                 return;
             }
-
-            this.Areas[this.Area] = new Area(234, 0.05);
-
-            setAdjacency(this.Area);
+            this.Areas[this.Area].Visited = true;
 
 
-            player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - player.Pic.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2 - player.Pic.Height));
             player.Pic.Visible = true;
         }
 
         private void Area7()
         {
-            this.Area = 7;
 
-            if (this.Areas[7] != null)
+            if (this.Areas[7].Visited)
             {
                 return;
             }
-
-            this.Areas[this.Area] = new Area(345, 0.05);
-
-            setAdjacency(this.Area);
+            this.Areas[this.Area].Visited = true;
 
 
-            player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - player.Pic.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2 - player.Pic.Height));
+
             player.Pic.Visible = true;
         }
 
         private void Area6()
         {
-            this.Area = 6;
 
-            if (this.Areas[6] != null)
+            if (this.Areas[6].Visited)
             {
                 return;
             }
-
-            this.Areas[this.Area] = new Area(456, 0.05);
-
-            setAdjacency(this.Area);
+            this.Areas[this.Area].Visited = true;
 
 
-            player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - player.Pic.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2 - player.Pic.Height));
+
             player.Pic.Visible = true;
         }
 
         private void Area5()
         {
-            this.Area = 5;
 
-            if (this.Areas[5] != null)
+            if (this.Areas[5].Visited)
             {
                 return;
             }
-
-            this.Areas[this.Area] = new Area(567, 0.05);
-
-            setAdjacency(this.Area);
+            this.Areas[this.Area].Visited = true;
 
 
-            player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - player.Pic.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2 - player.Pic.Height));
+
             player.Pic.Visible = true;
         }
 
@@ -662,14 +745,12 @@ namespace Fall2020_CSC403_Project
             // leave this here, default case when this.Area is unset.
             this.Area = 4;
 
-            if (this.Areas[4] != null)
+            if (this.Areas[4].Visited)
             {
                 return;
             }
+            this.Areas[this.Area].Visited = true;
 
-            this.Areas[this.Area] = new Area(678, 0.05);
-
-            setAdjacency(this.Area);
 
 
             Area currentArea = this.Areas[4];
@@ -695,17 +776,14 @@ namespace Fall2020_CSC403_Project
         private void Area3()
         {
 
-            if (this.Areas[3] != null) { }
+            if (this.Areas[3].Visited)
             {
                 return;
             }
-
-            this.Areas[3] = new Area(789, 0.05);
-
-            setAdjacency(this.Area);
+            this.Areas[this.Area].Visited = true;
 
 
-            player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - player.Pic.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2 - player.Pic.Height));
+
             player.Pic.Visible = true;
 
 
@@ -713,50 +791,39 @@ namespace Fall2020_CSC403_Project
 
         private void Area2()
         {
-            if (this.Areas[3] != null) { }
+            if (this.Areas[this.Area].Visited)
             {
                 return;
             }
+            this.Areas[this.Area].Visited = true;
 
-            this.Areas[4] = new Area(890, 0.05);
-
-            setAdjacency(this.Area);
-
-
-            player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - player.Pic.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2 - player.Pic.Height));
             player.Pic.Visible = true;
         }
 
         private void Area1()
         {
 
-            if (this.Areas[1] != null) { }
+            if (this.Areas[this.Area].Visited)
             {
                 return;
             }
 
-            this.Areas[this.Area] = new Area(901, 0.05);
-
-            setAdjacency(this.Area);
+            this.Areas[this.Area].Visited = true;
 
 
-            player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - player.Pic.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2 - player.Pic.Height));
             player.Pic.Visible = true;
         }
 
         private void Area0()
         {
 
-            if (this.Areas[this.Area] != null) { }
+            if (this.Areas[this.Area].Visited)
             {
                 return;
             }
+            this.Areas[this.Area].Visited = true;
 
-            this.Areas[this.Area] = new Area(12, 0.05);
 
-            setAdjacency(this.Area);
-
-            player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - player.Pic.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2 - player.Pic.Height));
             player.Pic.Visible = true;
         }
 
@@ -771,19 +838,59 @@ namespace Fall2020_CSC403_Project
             if (up >= 0)
             {
                 this.Areas[area].SetAdjacentArea(Direction.Up, up);
+                this.Areas[area].SetTravelSign(Direction.Up, new TravelSign(this.Areas[up].AreaName, MakePictureBox(Resources.travel_sign, new Point(Screen.PrimaryScreen.Bounds.Width / 2 - this.signSize.Width / 2, 10), this.signSize)));
             }
             if (down >= 0)
             {
                 this.Areas[area].SetAdjacentArea(Direction.Down, down);
+                this.Areas[area].SetTravelSign(Direction.Down, new TravelSign(this.Areas[down].AreaName, MakePictureBox(Resources.travel_sign, new Point(Screen.PrimaryScreen.Bounds.Width / 2 - this.signSize.Width / 2, Screen.PrimaryScreen.Bounds.Height - 80 - this.signSize.Height), this.signSize)));
+
             }
             if (left >= 0)
             {
                 this.Areas[area].SetAdjacentArea(Direction.Left, left);
+                this.Areas[area].SetTravelSign(Direction.Left, new TravelSign(this.Areas[left].AreaName, MakePictureBox(Resources.travel_sign, new Point(10, Screen.PrimaryScreen.Bounds.Height / 2 - this.signSize.Height / 2), this.signSize)));
+
             }
             if (right >= 0)
             {
                 this.Areas[area].SetAdjacentArea(Direction.Right, right);
+                this.Areas[area].SetTravelSign(Direction.Right, new TravelSign(this.Areas[right].AreaName, MakePictureBox(Resources.travel_sign, new Point(Screen.PrimaryScreen.Bounds.Width - 10 - this.signSize.Width, Screen.PrimaryScreen.Bounds.Height / 2 - this.signSize.Height / 2), this.signSize)));
+
             }
+        }
+
+        private void TravelButton_Click(object sender, EventArgs e)
+        {
+            DisposeLevel();
+            this.Area = this.Areas[this.Area].AdjacentAreas[this.TravelDirection];
+
+            switch (this.TravelDirection)
+            {
+                case Direction.Up:
+                    player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - player.Pic.Width / 2, Screen.PrimaryScreen.Bounds.Height - signSize.Height - player.Pic.Height  - 100));
+                    break;
+                case Direction.Down:
+                    player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - player.Pic.Width / 2, signSize.Height + 20));
+                    break;
+                case Direction.Right:
+                    player.SetEntityPosition(new Position(signSize.Width + 10, Screen.PrimaryScreen.Bounds.Height / 2 - player.Pic.Height / 2));
+                    break;
+                case Direction.Left:
+                    player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width - signSize.Width - 20 - player.Pic.Width, Screen.PrimaryScreen.Bounds.Height / 2 - player.Pic.Height / 2));
+                    break;
+
+                default:
+                    player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - player.Pic.Width, Screen.PrimaryScreen.Bounds.Height - player.Pic.Height));
+                    break;
+            }
+
+            AreaSelect();
+
+
+            InitializeAreaLayout();
+            Game.player = player;
+
         }
     }
 }

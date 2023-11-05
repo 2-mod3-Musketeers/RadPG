@@ -176,12 +176,7 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyGameLibrary\MyGameLibrary.csproj">
-      <Project>{F1E60F80-1868-4FE5-991B-FDDCFAF9B16B}</Project>
-      <Name>MyGameLibrary</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="data\travel_sign.png" />
     <Content Include="gfgLogoIco.ico" />
     <None Include="data\wall_cobblestone.png" />
     <None Include="data\wall_bricks.png" />
@@ -234,6 +229,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyGameLibrary\MyGameLibrary.csproj">
+      <Project>{F1E60F80-1868-4FE5-991B-FDDCFAF9B16B}</Project>
+      <Name>MyGameLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

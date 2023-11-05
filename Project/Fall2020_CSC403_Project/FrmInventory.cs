@@ -43,6 +43,7 @@ namespace Fall2020_CSC403_Project
         private Label DefStat;
         private Label SpeedStat;
 
+        private Point PanOffset;
 
         public FrmInventory()
         {
@@ -51,17 +52,19 @@ namespace Fall2020_CSC403_Project
             this.KeyPreview = true;
         }
 
-        public static FrmInventory GetInstance(Player player)
+        public static FrmInventory GetInstance(Player player, Point PanOffset)
         {
             instance = new FrmInventory();
-            instance.Setup(player);
+            instance.Setup(player, PanOffset);
             return instance;
         }
 
-        public void Setup(Player player)
+        public void Setup(Player player, Point PanOffset)
         {
             int height = Screen.PrimaryScreen.Bounds.Height;
             int width = Screen.PrimaryScreen.Bounds.Width;
+
+            this.PanOffset = PanOffset;
 
             this.KeyDown += FrmInventory_KeyDown;
             this.BackColor = Color.DarkSlateGray;
@@ -324,17 +327,17 @@ namespace Fall2020_CSC403_Project
         {
             if (selected == 10)
             {
-                player.Inventory.UnEquipWeapon(player.Position, player.facing);
+                player.Inventory.UnEquipWeapon(player.Position, player.facing, this.PanOffset);
                 RefreshInv();
             }
             else if (selected == 11)
             {
-                player.Inventory.UnEquipArmor(player.Position, player.facing);
+                player.Inventory.UnEquipArmor(player.Position, player.facing, this.PanOffset);
                 RefreshInv();
             }
             else if (selected == 12)
             {
-                player.Inventory.UnEquipUtility(player.Position, player.facing);
+                player.Inventory.UnEquipUtility(player.Position, player.facing, this.PanOffset);
                 RefreshInv();
             }
             else { }
@@ -369,16 +372,16 @@ namespace Fall2020_CSC403_Project
             {
                 if (player.Inventory.Backpack[selected - 1] != null && player.Inventory.Backpack[selected - 1].Type == MyGameLibrary.Item.ItemType.Weapon)
                 {
-                    player.Inventory.EquipWeapon(player.Inventory.Backpack[selected - 1], player.Position, player.facing);
+                    player.Inventory.EquipWeapon(player.Inventory.Backpack[selected - 1], player.Position, player.facing, this.PanOffset);
 
                 }
                 else if (player.Inventory.Backpack[selected - 1] != null && player.Inventory.Backpack[selected - 1].Type == MyGameLibrary.Item.ItemType.Armor)
                 {
-                    player.Inventory.EquipArmor(player.Inventory.Backpack[selected - 1], player.Position, player.facing);
+                    player.Inventory.EquipArmor(player.Inventory.Backpack[selected - 1], player.Position, player.facing, this.PanOffset);
                 }
                 else if (player.Inventory.Backpack[selected - 1] != null && player.Inventory.Backpack[selected - 1].Type == MyGameLibrary.Item.ItemType.Utility)
                 {
-                    player.Inventory.EquipUtility(player.Inventory.Backpack[selected - 1], player.Position, player.facing);
+                    player.Inventory.EquipUtility(player.Inventory.Backpack[selected - 1], player.Position, player.facing, this.PanOffset);
                 }
                 else { }
 
@@ -399,7 +402,7 @@ namespace Fall2020_CSC403_Project
         {
             if (selected > 0 && selected < 10)
             {
-                player.Inventory.DropItem(player.Inventory.Backpack[selected - 1], player.Position, player.facing);
+                player.Inventory.DropItem(player.Inventory.Backpack[selected - 1], player.Position, player.facing, this.PanOffset);
                 player.Inventory.RemoveFromBackpack(selected - 1);
             }
             if (selected > 0)

@@ -16,19 +16,31 @@ namespace MyGameLibrary
         public List<Enemy> Enemies { get; set; }
         public List<Item> Items { get; set; }
         public List<Wall> Walls { get; set; }
+        
+
+
+        public bool Visited { get; set; }
+
+        public String AreaName { get; set; }
+
+
+        public Dictionary<Direction, TravelSign> TravelSigns { get; set; }
 
         public Dictionary<Direction, int> AdjacentAreas { get; set; }
 
         public Terrain Terrain;
 
 
-        public Area(int Seed, double SeedAmp)
+        public Area(String AreaName, int Seed, double SeedAmp)
         {
             Terrain = new Terrain(Seed, SeedAmp);
             Enemies = new List<Enemy>();
             Items = new List<Item>();
             Walls = new List<Wall>();
             AdjacentAreas = new Dictionary<Direction, int>();
+            TravelSigns = new Dictionary<Direction, TravelSign>();
+            this.AreaName = AreaName;
+            this.Visited = false;
         }
         public void AddWall(Wall wall)
         {
@@ -51,10 +63,17 @@ namespace MyGameLibrary
             this.AdjacentAreas[direction] = area;
         }
 
+        public void SetTravelSign(Direction direction, TravelSign sign)
+        {
+            this.TravelSigns[direction] = sign;
+        }
+
+
     }
 
     public enum Direction
     {
+        None,
         Left,
         Right,
         Up,

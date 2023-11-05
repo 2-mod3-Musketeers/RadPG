@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Fall2020_CSC403_Project.code;
 using MyGameLibrary;
+using Fall2020_CSC403_Project;
 using static Fall2020_CSC403_Project.code.Entity;
+using System.Drawing;
 
 namespace MyGameLibrary
 {
@@ -42,26 +45,27 @@ namespace MyGameLibrary
             }
         }
 
-        public bool BackpackIsFull(){
+        public bool BackpackIsFull()
+        {
             return this.Backpack[this.Backpack.Length - 1] != null;
         }
 
-        public void UnEquipWeapon(Position position, Facing facing)
+        public void UnEquipWeapon(Position position, Facing facing, Point PanOffset)
         {
-            EquipWeapon(null, position, facing);
+            EquipWeapon(null, position, facing, PanOffset);
         }
 
-        public void UnEquipArmor(Position position, Facing facing)
+        public void UnEquipArmor(Position position, Facing facing, Point PanOffset)
         {
-            EquipArmor(null, position, facing);
+            EquipArmor(null, position, facing, PanOffset);
         }
 
-        public void UnEquipUtility(Position position, Facing facing)
+        public void UnEquipUtility(Position position, Facing facing, Point PanOffset)
         {
-            EquipUtility(null, position, facing);
+            EquipUtility(null, position, facing, PanOffset);
         }
 
-        public void EquipWeapon(Item item, Position position, Facing facing)
+        public void EquipWeapon(Item item, Position position, Facing facing, Point PanOffset)
         {
             Item currently_equipped = this.Weapon;
             if (item == null || item.Type == Item.ItemType.Weapon)
@@ -70,7 +74,7 @@ namespace MyGameLibrary
                 RemoveFromBackpack(item);
                 if (BackpackIsFull())
                 {
-                    DropItem(currently_equipped, position, facing);
+                    DropItem(currently_equipped, position, facing, PanOffset);
 
                 } else
                 {
@@ -82,7 +86,7 @@ namespace MyGameLibrary
                 Console.Error.WriteLine("Not a weapon");
             }
         }
-        public void EquipArmor(Item item, Position position, Facing facing)
+        public void EquipArmor(Item item, Position position, Facing facing, Point PanOffset)
         {
             Item currently_equipped = this.Armor;
             if (item == null || item.Type == Item.ItemType.Armor)
@@ -91,7 +95,7 @@ namespace MyGameLibrary
                 RemoveFromBackpack(item);
                 if (BackpackIsFull())
                 {
-                    DropItem(currently_equipped, position, facing);
+                    DropItem(currently_equipped, position, facing, PanOffset);
                 }
                 else
                 {
@@ -101,7 +105,7 @@ namespace MyGameLibrary
                 Console.Error.WriteLine("Not armor");
             }
         }
-        public void EquipUtility(Item item, Position position, Facing facing)
+        public void EquipUtility(Item item, Position position, Facing facing, Point PanOffset)
         {
             Item currently_equipped = this.Utility;
             if (item == null || item.Type == Item.ItemType.Utility)
@@ -110,7 +114,7 @@ namespace MyGameLibrary
                 RemoveFromBackpack(item);
                 if (BackpackIsFull())
                 {
-                    DropItem(currently_equipped, position, facing);
+                    DropItem(currently_equipped, position, facing, PanOffset);
                 }
                 else
                 {
@@ -179,14 +183,16 @@ namespace MyGameLibrary
 
         }
 
-        public void DropItem(Item item, Position position, Facing facing)
+
+        public void DropItem(Item item, Position position, Facing facing, Point PanOffset)
         {
             if (item == null)
             {
                 return;
             }
             Position new_position = new Position(position.x, position.y);
-            new_position.x = facing == Facing.Left ? new_position.x - item.Pic.Size.Width - 10 : new_position.x + item.Pic.Size.Width + 10;
+            new_position.x = facing == Facing.Left ? new_position.x - item.Pic.Size.Width - 10 : new_position.x + 10;
+            item.StartPos = new System.Drawing.Point((int)new_position.x - PanOffset.X, (int)new_position.y - PanOffset.Y);
             item.SetEntityPosition(new_position);
         }
 

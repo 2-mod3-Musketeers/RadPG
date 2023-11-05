@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="Terrain.cs" />
     <Compile Include="Tile.cs" />
+    <Compile Include="TravelSign.cs" />
     <Compile Include="Wall.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +103,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\tile_water_grassy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\travel_sign.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
