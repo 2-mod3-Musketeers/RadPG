@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,5 +22,10 @@ namespace Fall2020_CSC403_Project.code
             this.Position = new Position(Pic);
         }
 
+        public void Move(Point point)
+        {
+            this.Pic.Location = point;
+            this.Collider.MovePosition((int)point.X, (int)point.Y);
+        }
     }
 }

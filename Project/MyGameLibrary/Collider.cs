@@ -29,8 +29,6 @@ namespace Fall2020_CSC403_Project.code
         }
 
 
-
-
         public void MovePosition(int x, int y)
         {
             rect.X = x;

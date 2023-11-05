@@ -29,6 +29,8 @@ namespace Fall2020_CSC403_Project.code
 
         public Facing facing { get; set; }
 
+        public Point StartPos { get; private set; }
+
 
         public enum Facing
         {
@@ -43,14 +45,15 @@ namespace Fall2020_CSC403_Project.code
             this.Pic = Pic;
             this.Position = new Position(this.Pic);
             this.Collider = new Collider(this.Pic);
+            this.StartPos = Pic.Location;
         }
         
-        public void Move()
+        public void Move(Point point)
         {
             this.LastPosition = Position;
             this.Position = new Position(Position.x + MoveSpeed.x, Position.y + MoveSpeed.y);
-            this.Pic.Location = new Point((int)this.Position.x, (int)this.Position.y);
-            this.Collider.MovePosition((int)Position.x, (int)Position.y);
+            this.Pic.Location = point;
+            this.Collider.MovePosition((int)point.X, (int)point.Y);
         }
 
 

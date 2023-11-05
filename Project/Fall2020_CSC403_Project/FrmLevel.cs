@@ -33,8 +33,12 @@ namespace Fall2020_CSC403_Project
 
         public Area[] Areas;
 
+        public Bitmap TerrainPic;
 
-        public PictureBox TerrainPic;
+        private Point PanOffset = new Point(0, 0);
+        private Thread panningThread;
+        private Keys keyDown;
+        private bool moving;
 
         public FrmLevel(Form MainMenu, Player player)
         {
@@ -51,6 +55,10 @@ namespace Fall2020_CSC403_Project
             this.MainMenu = MainMenu;
 
             this.Areas = new Area[10];
+
+            panningThread = new Thread(PanningThread);
+            panningThread.IsBackground = true;
+            panningThread.Start();
 
         }
 
@@ -77,14 +85,81 @@ namespace Fall2020_CSC403_Project
             this.gameAudio.PlayLooping();
         }
 
+
+        private void PanningThread()
+        {
+            int step = 3;
+            while (true)
+            {
+                switch (this.keyDown) {
+                    case Keys.A:
+                        moving = true;
+                        this.PanOffset.X += step;
+
+                        break;
+
+                    case Keys.D:
+                        moving = true;
+                        this.PanOffset.X -= step;
+
+                        break;
+
+                    case Keys.W:
+                        moving = true;
+                        this.PanOffset.Y += step;
+
+                        break;
+
+                    case Keys.S:
+                        moving = true;
+                        this.PanOffset.Y -= step;
+
+                        break;
+
+                    case Keys.E:
+                        moving = false;
+                        this.keyDown = Keys.None;
+                        frminventory = FrmInventory.GetInstance(player);
+                        frminventory.Show();
+                        break;
+
+                    case Keys.Escape:
+                        moving = false;
+                        this.keyDown = Keys.None;
+                        FrmSettings frmsettings = new FrmSettings(this);
+                        frmsettings.FormClosed += (s, args) => this.Close(); // Handle closure of FrmLevel to close the application
+                        frmsettings.Show();
+                        this.Hide();
+                        break;
+
+                    default:
+                        moving = false;
+                        this.keyDown = Keys.None;
+                        break;
+                }
+                Thread.Sleep(10);
+            }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            Graphics g = e.Graphics;
+
+            g.DrawImage(this.TerrainPic, PanOffset.X, PanOffset.Y, Screen.PrimaryScreen.Bounds.Width * 2, Screen.PrimaryScreen.Bounds.Height * 2);
+            
+
+        }
+
         private void InitializeAreaLayout()
         {
 
             if (this.Areas[Area].Terrain != null)
             {
 
-                Bitmap combinedImage = new Bitmap(Terrain.GridWidth * Terrain.TileSize.Width, Terrain.GridHeight * Terrain.TileSize.Width);
-                using(Graphics g = Graphics.FromImage(combinedImage))
+                this.TerrainPic = new Bitmap(Terrain.GridWidth * Terrain.TileSize.Width, Terrain.GridHeight * Terrain.TileSize.Width);
+                using(Graphics g = Graphics.FromImage(this.TerrainPic))
                 {
                     for (int col = 0; col < Terrain.GridWidth; col++)
                     {
@@ -98,8 +173,7 @@ namespace Fall2020_CSC403_Project
                         }
                     }
                 }
-                this.BackgroundImage = combinedImage;
-
+                
 
 
                 if (this.Areas[Area].Walls != null)
@@ -153,46 +227,12 @@ namespace Fall2020_CSC403_Project
 
         private void FrmLevel_KeyUp(object sender, KeyEventArgs e)
         {
-            player.ResetMoveSpeed();
+            this.keyDown = Keys.None;
         }
 
         private void FrmLevel_KeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)
-            {
-                case Keys.A:
-                    player.GoLeft();
-                    break;
-
-                case Keys.D:
-                    player.GoRight();
-                    break;
-
-                case Keys.W:
-                    player.GoUp();
-                    break;
-
-                case Keys.S:
-                    player.GoDown();
-                    break;
-
-                case Keys.E:
-                    player.ResetMoveSpeed();
-                    frminventory = FrmInventory.GetInstance(player);
-                    frminventory.Show();
-                    break;
-
-                case Keys.Escape:
-                    FrmSettings frmsettings = new FrmSettings(this);
-                    frmsettings.FormClosed += (s, args) => this.Close(); // Handle closure of FrmLevel to close the application
-                    frmsettings.Show();
-                    this.Hide();
-                    break;
-
-                default:
-                    player.ResetMoveSpeed();
-                    break;
-            }
+            this.keyDown = e.KeyCode;
         }
 
 
@@ -210,19 +250,38 @@ namespace Fall2020_CSC403_Project
                 return;
             }
 
-            // move playerd
-            player.Move();
+            if (moving)
+            {
+                for (int i = 0; i < this.Areas[Area].Enemies.Count; i++)
+                {
+                    this.Areas[Area].Enemies[i].Move(new Point((int)this.Areas[Area].Enemies[i].StartPos.X + this.PanOffset.X, (int)this.Areas[Area].Enemies[i].StartPos.Y + this.PanOffset.Y));
+                }
+
+                for (int i = 0; i < this.Areas[Area].Items.Count; i++)
+                {
+                    this.Areas[Area].Items[i].Move(new Point(this.Areas[Area].Items[i].StartPos.X + this.PanOffset.X, (int)this.Areas[Area].Items[i].StartPos.Y + this.PanOffset.Y));
+                }
+
+                for (int i = 0; i < this.Areas[Area].Walls.Count; i++)
+                {
+                    this.Areas[Area].Walls[i].Move(new Point((int)this.Areas[Area].Walls[i].Position.x + (int)this.PanOffset.X, (int)this.Areas[Area].Walls[i].Position.y + (int)this.PanOffset.Y));
+                }
+                this.Invalidate();
+            }
+
+
 
             // check collision with walls
             if (HitAWall(player))
             {
-                player.MoveBack();
+                this.keyDown = Keys.None;
             }
 
             // check collision with enemies
             int x = HitAChar(player);
             if (x >= 0)
             {
+                this.keyDown = Keys.None;
                 Fight(this.Areas[Area].Enemies[x]);
                 Controls.Remove(this.Areas[Area].Enemies[x].Pic);
                 this.Areas[Area].Enemies.Remove(this.Areas[Area].Enemies[x]);
@@ -387,7 +446,6 @@ namespace Fall2020_CSC403_Project
         private void DisposeLevel()
         {
 
-            // iterate through the controls and remove them from control
 
             for (int i = 0; i < this.Areas[Area].Enemies.Count; i++)
             {
