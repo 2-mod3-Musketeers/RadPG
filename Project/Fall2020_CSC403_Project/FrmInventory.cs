@@ -1,4 +1,5 @@
 ﻿using Fall2020_CSC403_Project.code;
+using MyGameLibrary;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -45,6 +46,8 @@ namespace Fall2020_CSC403_Project
 
         private Point PanOffset;
 
+        private Area Area;
+
         public FrmInventory()
         {
             this.WindowState = FormWindowState.Maximized;
@@ -52,15 +55,18 @@ namespace Fall2020_CSC403_Project
             this.KeyPreview = true;
         }
 
-        public static FrmInventory GetInstance(Player player, Point PanOffset)
+        public static FrmInventory GetInstance(Player player, Area area, Point PanOffset)
         {
             instance = new FrmInventory();
-            instance.Setup(player, PanOffset);
+            instance.Setup(player, area, PanOffset);
             return instance;
         }
 
-        public void Setup(Player player, Point PanOffset)
+        public void Setup(Player player, Area area, Point PanOffset)
         {
+
+            this.Area = area;
+
             int height = Screen.PrimaryScreen.Bounds.Height;
             int width = Screen.PrimaryScreen.Bounds.Width;
 
@@ -327,17 +333,17 @@ namespace Fall2020_CSC403_Project
         {
             if (selected == 10)
             {
-                player.Inventory.UnEquipWeapon(player.Position, player.facing, this.PanOffset);
+                player.Inventory.UnEquipWeapon(player.Position, player.facing, this.Area, this.PanOffset);
                 RefreshInv();
             }
             else if (selected == 11)
             {
-                player.Inventory.UnEquipArmor(player.Position, player.facing, this.PanOffset);
+                player.Inventory.UnEquipArmor(player.Position, player.facing, this.Area, this.PanOffset);
                 RefreshInv();
             }
             else if (selected == 12)
             {
-                player.Inventory.UnEquipUtility(player.Position, player.facing, this.PanOffset);
+                player.Inventory.UnEquipUtility(player.Position, player.facing, this.Area, this.PanOffset);
                 RefreshInv();
             }
             else { }
@@ -372,16 +378,16 @@ namespace Fall2020_CSC403_Project
             {
                 if (player.Inventory.Backpack[selected - 1] != null && player.Inventory.Backpack[selected - 1].Type == MyGameLibrary.Item.ItemType.Weapon)
                 {
-                    player.Inventory.EquipWeapon(player.Inventory.Backpack[selected - 1], player.Position, player.facing, this.PanOffset);
+                    player.Inventory.EquipWeapon(player.Inventory.Backpack[selected - 1], player.Position, player.facing, this.Area, this.PanOffset);
 
                 }
                 else if (player.Inventory.Backpack[selected - 1] != null && player.Inventory.Backpack[selected - 1].Type == MyGameLibrary.Item.ItemType.Armor)
                 {
-                    player.Inventory.EquipArmor(player.Inventory.Backpack[selected - 1], player.Position, player.facing, this.PanOffset);
+                    player.Inventory.EquipArmor(player.Inventory.Backpack[selected - 1], player.Position, player.facing, this.Area, this.PanOffset);
                 }
                 else if (player.Inventory.Backpack[selected - 1] != null && player.Inventory.Backpack[selected - 1].Type == MyGameLibrary.Item.ItemType.Utility)
                 {
-                    player.Inventory.EquipUtility(player.Inventory.Backpack[selected - 1], player.Position, player.facing, this.PanOffset);
+                    player.Inventory.EquipUtility(player.Inventory.Backpack[selected - 1], player.Position, player.facing, this.Area, this.PanOffset);
                 }
                 else { }
 
@@ -402,7 +408,7 @@ namespace Fall2020_CSC403_Project
         {
             if (selected > 0 && selected < 10)
             {
-                player.Inventory.DropItem(player.Inventory.Backpack[selected - 1], player.Position, player.facing, this.PanOffset);
+                player.Inventory.DropItem(player.Inventory.Backpack[selected - 1], player.Position, player.facing, this.Area, this.PanOffset);
                 player.Inventory.RemoveFromBackpack(selected - 1);
             }
             if (selected > 0)

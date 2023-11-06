@@ -53,6 +53,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
+    <Reference Include="System.Text.Json, Version=7.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -75,6 +77,12 @@
     </Compile>
     <Compile Include="FrmInventory.Designer.cs">
       <DependentUpon>FrmInventory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmLeaderboard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmLeaderboard.Designer.cs">
+      <DependentUpon>FrmLeaderboard.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmPlayerSelect.cs">
       <SubType>Form</SubType>
@@ -113,6 +121,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmInventory.resx">
       <DependentUpon>FrmInventory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmLeaderboard.resx">
+      <DependentUpon>FrmLeaderboard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmLevel.resx">
       <DependentUpon>FrmLevel.cs</DependentUpon>
@@ -173,10 +184,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="code\" />
-    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\harold1.png" />
     <None Include="data\travel_sign.png" />
+    <None Include="data\house_L.png" />
+    <None Include="data\house_long.png" />
     <Content Include="gfgLogoIco.ico" />
     <None Include="data\wall_cobblestone.png" />
     <None Include="data\wall_bricks.png" />

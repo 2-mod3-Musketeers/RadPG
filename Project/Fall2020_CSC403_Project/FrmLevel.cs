@@ -10,6 +10,10 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Threading;
 using System.Media;
+using System.Text.Json;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace Fall2020_CSC403_Project
 {
@@ -20,6 +24,7 @@ namespace Fall2020_CSC403_Project
         private Form MainMenu;
 
         public int Area { get; set; }
+        public int score;
 
         public bool gameOver { get; set; }
 
@@ -36,6 +41,7 @@ namespace Fall2020_CSC403_Project
 
         public Bitmap TerrainPic;
 
+        private Point LastPanOffset = new Point(0, 0);
         private Point PanOffset = new Point(0, 0);
         private Thread panningThread;
         private Keys keyDown;
@@ -43,10 +49,16 @@ namespace Fall2020_CSC403_Project
 
         private Direction TravelDirection = Direction.None;
 
+        public Label ScoreLabel;
+
         public FrmLevel(Form MainMenu, Player player)
         {
             this.KeyPreview = true;
             this.DoubleBuffered = true;
+
+            this.ScoreLabel = null;
+
+            this.score = 0;
 
             this.gameAudio = new SoundPlayer(Resources.Game_audio);
 
@@ -76,8 +88,9 @@ namespace Fall2020_CSC403_Project
             this.Areas[5] = new Area("Lower Harmony Village", 567, 0.05);
             this.Areas[6] = new Area("Windy Plateau", 456, 0.05);
             this.Areas[7] = new Area("Harmony Plains", 345, 0.05);
-            this.Areas[8] = new Area("Harmony Village", 234, 0.05);
+            this.Areas[8] = new Area("Harmony Village", 623, 0.15);
             this.Areas[9] = new Area("Dragon's Lair", 123, 0.2);
+
 
             for (int i = 0; i < 9; i++)
             {
@@ -91,6 +104,18 @@ namespace Fall2020_CSC403_Project
             Game.player = player;
             timeBegin = DateTime.Now;
 
+            this.ScoreLabel = new Label();
+            this.Controls.Add(ScoreLabel);
+            ScoreLabel.BackColor = Color.Black;
+            ScoreLabel.ForeColor = Color.White;
+            ScoreLabel.Text = "Score: " + score.ToString();
+            ScoreLabel.Location = new Point(Screen.PrimaryScreen.Bounds.Width - ScoreLabel.Width - 20, 15);
+            ScoreLabel.Font = new Font("Microsoft Sans Serif", 11);
+            ScoreLabel.Visible = true;
+            ScoreLabel.BringToFront();
+            
+            
+            
 
             //Adding stop condition to mainMenu_music here
             FrmMain mainMenuPlayer = Application.OpenForms["FrmMain"] as FrmMain;
@@ -152,6 +177,7 @@ namespace Fall2020_CSC403_Project
                         this.keyDown = Keys.None;
                         break;
                 }
+
                 Thread.Sleep(10);
             }
         }
@@ -197,13 +223,11 @@ namespace Fall2020_CSC403_Project
                     }
                 }
 
-
-
-                if (this.Areas[Area].Walls != null)
+                if (this.Areas[Area].Structures != null)
                 {
-                    for (int i = 0; i < this.Areas[Area].Walls.Count; i++)
+                    for (int i = 0; i < this.Areas[Area].Structures.Count; i++)
                     {
-                        this.Controls.Add(this.Areas[Area].Walls[i].Pic);
+                        this.Controls.Add(this.Areas[Area].Structures[i].Pic);
                     }
                 }
                 if (this.Areas[Area].Items != null)
@@ -224,6 +248,14 @@ namespace Fall2020_CSC403_Project
                 }
             }
 
+            if(this.Areas[Area].npcs != null)
+            {
+                for (int i = 0; i < this.Areas[Area].npcs.Count; i++)
+                {
+                    this.Controls.Add(this.Areas[Area].npcs[i].Pic);
+                    this.Areas[Area].npcs[i].Pic.BringToFront();
+                }
+            }
 
             if (player != null)
             {
@@ -263,8 +295,8 @@ namespace Fall2020_CSC403_Project
             {
                 case Keys.E:
                     moving = false;
-                    this.keyDown = Keys.None;
-                    frminventory = FrmInventory.GetInstance(player, PanOffset);
+                    player.ResetMoveSpeed();
+                    frminventory = FrmInventory.GetInstance(player, this.Areas[this.Area], PanOffset);
                     frminventory.Show();
                     break;
 
@@ -297,8 +329,17 @@ namespace Fall2020_CSC403_Project
                 return;
             }
 
+
+            // check collision with Structures
+            if (HitAStructure(player))
+            {
+                this.keyDown = Keys.None;
+                this.PanOffset = LastPanOffset;
+            }
+
             if (moving)
             {
+                this.LastPanOffset = this.PanOffset;
                 for (int i = 0; i < this.Areas[Area].Enemies.Count; i++)
                 {
                     this.Areas[Area].Enemies[i].Move(new Point((int)this.Areas[Area].Enemies[i].StartPos.X + this.PanOffset.X, (int)this.Areas[Area].Enemies[i].StartPos.Y + this.PanOffset.Y));
@@ -309,30 +350,39 @@ namespace Fall2020_CSC403_Project
                     this.Areas[Area].Items[i].Move(new Point(this.Areas[Area].Items[i].StartPos.X + this.PanOffset.X, (int)this.Areas[Area].Items[i].StartPos.Y + this.PanOffset.Y));
                 }
 
-                for (int i = 0; i < this.Areas[Area].Walls.Count; i++)
+                for (int i = 0; i < this.Areas[Area].Structures.Count; i++)
                 {
-                    this.Areas[Area].Walls[i].Move(new Point((int)this.Areas[Area].Walls[i].Position.X + (int)this.PanOffset.X, (int)this.Areas[Area].Walls[i].Position.Y + (int)this.PanOffset.Y));
+                    this.Areas[Area].Structures[i].Move(new Point((int)this.Areas[Area].Structures[i].Position.X + (int)this.PanOffset.X, (int)this.Areas[Area].Structures[i].Position.Y + (int)this.PanOffset.Y));
                 }
+
+                for (int i = 0; i < this.Areas[Area].npcs.Count; i++)
+                {
+                    this.Areas[Area].npcs[i].Move(new Point((int)this.Areas[Area].npcs[i].StartPos.X + (int)this.PanOffset.X, (int)this.Areas[Area].npcs[i].StartPos.Y + (int)this.PanOffset.Y));
+                }
+
                 this.Invalidate();
             }
 
 
 
-            // check collision with walls
-            if (HitAWall(player))
-            {
-                this.keyDown = Keys.None;
-            }
 
             // check collision with enemies
-            int x = HitAChar(player);
+            int x = hitEnemy(player);
             if (x >= 0)
             {
                 this.keyDown = Keys.None;
                 Fight(this.Areas[Area].Enemies[x]);
-                Controls.Remove(this.Areas[Area].Enemies[x].Pic);
-                this.Areas[Area].Enemies.Remove(this.Areas[Area].Enemies[x]);
 
+
+            }
+
+            // check collision with NPCs
+            int npcIndex = hitNPC(player);
+            if (npcIndex >= 0)
+            {
+                Converse(this.Areas[Area].npcs[npcIndex]);
+                Controls.Remove(this.Areas[Area].npcs[npcIndex].Pic);
+                this.Areas[Area].npcs.Remove(this.Areas[Area].npcs[npcIndex]);
             }
 
             x = HitAnItem(player);
@@ -341,6 +391,7 @@ namespace Fall2020_CSC403_Project
                 if (!player.Inventory.BackpackIsFull())
                 {
                     Item item = this.Areas[this.Area].Items[x];
+                    this.Areas[this.Area].Items.Remove(item);
                     player.Inventory.AddToBackpack(item);
                     item.HideEntity();
                 }
@@ -382,12 +433,12 @@ namespace Fall2020_CSC403_Project
             return Direction.None;
         }
 
-        private bool HitAWall(Player c)
+        private bool HitAStructure(Player c)
         {
             bool hitAWall = false;
-            for (int w = 0; w < this.Areas[Area].Walls.Count; w++)
+            for (int w = 0; w < this.Areas[Area].Structures.Count; w++)
             {
-                if (c.Collider.Intersects(this.Areas[Area].Walls[w].Collider))
+                if (c.Collider.Intersects(this.Areas[Area].Structures[w].Collider))
                 {
                     hitAWall = true;
                     break;
@@ -396,7 +447,7 @@ namespace Fall2020_CSC403_Project
             return hitAWall;
         }
 
-        private int HitAChar(Player you)
+        private int hitEnemy(Player you)
         {
             if (this.Areas[Area].Enemies == null)
             {
@@ -408,6 +459,27 @@ namespace Fall2020_CSC403_Project
                 if (this.Areas[Area].Enemies[i] != null)
                 {
                     if (you.Collider.Intersects(this.Areas[Area].Enemies[i].Collider))
+                    {
+                        hitChar = i;
+                        break;
+                    }
+                }
+            }
+            return hitChar;
+        }
+
+        private int hitNPC(Player you)
+        {
+            if(this.Areas[Area].npcs == null)
+            {
+                return -1;
+            }
+            int hitChar = -1;
+            for (int i = 0; i < this.Areas[Area].npcs.Count; i++)
+            {
+                if (this.Areas[Area].npcs[i] != null)
+                {
+                    if (you.Collider.Intersects(this.Areas[Area].npcs[i].Collider))
                     {
                         hitChar = i;
                         break;
@@ -455,11 +527,31 @@ namespace Fall2020_CSC403_Project
             player.MoveBack();
             frmBattleScreen = FrmBattleScreen.GetInstance(this, enemy);
             frmBattleScreen.Show();
+        }
 
-            /*            if (enemy.Name == "BossKoolAid")
-                        {
-                            frmBattleScreen.SetupForBossBattle();
-                        }*/
+        public void RemoveEnemy(Enemy enemy)
+        {
+            Controls.Remove(enemy.Pic);
+            this.Areas[Area].Enemies.Remove(enemy);
+            score += 100;
+            ScoreLabel.Text = "Score: " + score.ToString();
+        }
+
+        private void Converse(NPC npc)
+        {
+            player.ResetMoveSpeed();
+            player.MoveBack();
+
+            // TODO: Insert conversation mechanic here
+
+            if(player.isPartyFull())
+            {
+                Console.WriteLine("PARTY IS FULL NOTIFICATION");
+            }
+            else
+            {
+                player.addPartyMember(npc);
+            }
         }
 
         public void GameOver()
@@ -516,7 +608,68 @@ namespace Fall2020_CSC403_Project
             MainMenuButton.Visible = true;
             MainMenuButton.BringToFront();
 
+            RecordLeaderboardData();
+
             gameAudio.Stop();
+        }
+
+        private void RecordLeaderboardData()
+        {
+            string filepath = "../../data/LeaderboardData.json";
+            string[] text = File.ReadAllLines(filepath);
+
+            string playerText = text[0];
+            string classText = text[1];
+            string scoresText = text[2];
+            string weaponText = text[3];
+            string armorText = text[4];
+            string utilityText = text[5];
+
+            List<String> topPlayers = JsonSerializer.Deserialize<List<String>>(playerText);
+            List<String> topClasses = JsonSerializer.Deserialize<List<String>>(classText);
+            List<int> topScores = JsonSerializer.Deserialize<List<int>>(scoresText);
+            List<String> topWeapons = JsonSerializer.Deserialize<List<String>>(weaponText);
+            List<String> topArmors = JsonSerializer.Deserialize<List<String>>(armorText);
+            List<String> topUtilities = JsonSerializer.Deserialize<List<String>>(utilityText);
+
+
+            for (int i = 0; i < topScores.Count; i++)
+            {
+                if (score > topScores[i])
+                {
+                    topPlayers.Insert(i, player.Name);
+                    topPlayers.RemoveAt(topPlayers.Count - 1);
+                    topClasses.Insert(i, player.archetype.name);
+                    topClasses.RemoveAt(topClasses.Count - 1);
+                    topScores.Insert(i, score);
+                    topScores.RemoveAt(topScores.Count - 1);
+                    if (player.Inventory.Weapon != null)
+                    {
+                        topWeapons.Insert(i, player.Inventory.Weapon.Name);
+                        topWeapons.RemoveAt(topWeapons.Count - 1);
+                    }
+                    if (player.Inventory.Armor != null)
+                    {
+                        topArmors.Insert(i, player.Inventory.Armor.Name);
+                        topArmors.RemoveAt(topArmors.Count - 1);
+                    }
+                    if (player.Inventory.Utility != null)
+                    {
+                        topUtilities.Insert(i, player.Inventory.Utility.Name);
+                        topUtilities.RemoveAt(topUtilities.Count - 1);
+                    }
+                    break;
+                }
+            }
+            string[] data = new string[9];
+            data[0] = JsonSerializer.Serialize(topPlayers);
+            data[1] = JsonSerializer.Serialize(topClasses);
+            data[2] = JsonSerializer.Serialize(topScores);
+            data[3] = JsonSerializer.Serialize(topWeapons);
+            data[4] = JsonSerializer.Serialize(topArmors);
+            data[5] = JsonSerializer.Serialize(topUtilities);
+
+            File.WriteAllLines(filepath, data);
         }
 
 
@@ -533,6 +686,11 @@ namespace Fall2020_CSC403_Project
                 this.Controls.Remove(this.Areas[Area].Enemies[i].Pic);
             }
 
+            for (int i = 0; i < this.Areas[Area].npcs.Count; i++)
+            {
+                this.Controls.Remove(this.Areas[Area].npcs[i].Pic);
+            }
+            this.Areas[Area].npcs = new List<NPC> { };
 
             //remove terrain here
 
@@ -540,9 +698,9 @@ namespace Fall2020_CSC403_Project
             {
                 this.Controls.Remove(this.Areas[Area].Items[i].Pic);
             }
-            for (int i = 0; i < this.Areas[Area].Walls.Count; i++)
+            for (int i = 0; i < this.Areas[Area].Structures.Count; i++)
             {
-                this.Controls.Remove(this.Areas[Area].Walls[i].Pic);
+                this.Controls.Remove(this.Areas[Area].Structures[i].Pic);
             }
 
             GC.Collect();
@@ -558,7 +716,7 @@ namespace Fall2020_CSC403_Project
                 this.Areas[i].AdjacentAreas.Clear();
                 this.Areas[i].Terrain.Tiles.Clear();
                 this.Areas[i].Items.Clear();
-                this.Areas[i].Walls.Clear();
+                this.Areas[i].Structures.Clear();
             }
             this.Areas = new Area[10];
             GC.Collect();
@@ -566,20 +724,16 @@ namespace Fall2020_CSC403_Project
         }
 
 
-        private void AddEnemy(Enemy enemy)
-        {
-            this.Areas[Area].Enemies.Add(enemy);
-        }
-
         private void Menu_Click(object sender, EventArgs e)
         {
-            frminventory = FrmInventory.GetInstance(player, this.PanOffset);
+            frminventory = FrmInventory.GetInstance(player, this.Areas[this.Area], this.PanOffset);
             frminventory.Show();
         }
 
 
         private void RestartButton_Click(object sender, EventArgs e)
         {
+            this.score = 0;
             gameAudio.PlayLooping();
 
             this.Areas[0] = new Area("Malek's Mountain", 12, 0.05);
@@ -692,8 +846,35 @@ namespace Fall2020_CSC403_Project
             }
             this.Areas[this.Area].Visited = true;
 
-
             player.Pic.Visible = true;
+
+
+            Area currentArea = this.Areas[this.Area];
+
+            Bitmap house_long = Resources.house_long;
+
+            Bitmap house_long_rot = Resources.house_long;
+            house_long_rot.RotateFlip(RotateFlipType.Rotate90FlipNone);
+
+            Bitmap house_L = Resources.house_L;
+
+            Bitmap house_L_rot90 = Resources.house_L;
+            house_L_rot90.RotateFlip(RotateFlipType.Rotate90FlipNone);
+
+            Bitmap house_L_rot180 = Resources.house_L;
+            house_L_rot180.RotateFlip(RotateFlipType.Rotate180FlipNone);
+
+            Size longSize = new Size(Terrain.TileSize.Width * 6, Terrain.TileSize.Height * 3);
+            Size longSize_rot = new Size(longSize.Height, longSize.Width);
+            Size L_Size = new Size(Terrain.TileSize.Width * 6, Terrain.TileSize.Height * 4);
+            Size L_Size_rot90 = new Size(L_Size.Height, L_Size.Width);
+
+            currentArea.AddStructure(new Structure(MakePictureBox(house_long_rot, new Point(Screen.PrimaryScreen.Bounds.Width * 3 / 4 - 100 , - 100), longSize_rot)));
+            currentArea.AddStructure(new Structure(MakePictureBox(house_long, new Point(Screen.PrimaryScreen.Bounds.Width / 2, 400), longSize)));
+            currentArea.AddStructure(new Structure(MakePictureBox(house_L, new Point(Screen.PrimaryScreen.Bounds.Width * 3 / 4, 300), L_Size)));
+            currentArea.AddStructure(new Structure(MakePictureBox(house_L_rot180, new Point(Screen.PrimaryScreen.Bounds.Width * 1 / 4, 80), L_Size)));
+
+
         }
 
         private void Area7()
@@ -769,8 +950,9 @@ namespace Fall2020_CSC403_Project
             currentArea.AddEnemy(new Enemy("Cheeto", MakePictureBox(Resources.enemy_cheetos, new Point(600, 200), new Size(75, 125)), new Minion()));
             currentArea.AddEnemy(new Enemy("BossKoolAid", MakePictureBox(Resources.enemy_koolaid, new Point(this.Width - 200, 100), new Size(150, 150)), new Boss()));
 
-            currentArea.AddWall(new Wall(MakePictureBox(Resources.wall_bricks, new Point(500, 500), new Size(20, 100))));
-            currentArea.Walls[0].Pic.Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
+            currentArea.AddNPC(new NPC("Harold", MakePictureBox(Resources.harold, new Point(150, 150), new Size(75, 100)), new Healer()));
+            currentArea.AddStructure(new Structure(MakePictureBox(Resources.wall_bricks, new Point(500, 500), new Size(20, 100))));
+            currentArea.Structures[0].Pic.Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
         }
 
         private void Area3()

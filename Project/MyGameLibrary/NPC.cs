@@ -8,11 +8,11 @@ using System.Windows.Forms;
 
 namespace Fall2020_CSC403_Project.code
 {
-  public class NPC : Character
+    public class NPC : Character
     {
-    public NPC(string Name, PictureBox Pic, Archetype archetype) : base(Name, Pic, archetype)
-        {
 
+        public NPC(string name, PictureBox pic, Archetype archetype) : base(name, pic, archetype)
+        { 
         }
     }
 }

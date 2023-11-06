@@ -8,17 +8,18 @@ using System.Windows.Forms;
 
 namespace Fall2020_CSC403_Project.code
 {
-    public class Wall
+    public class Structure
     {
         public PictureBox Pic { get; set; }
         public Collider Collider { get; set; }
 
         public Point Position { get; set; }
 
-        public Wall(PictureBox Pic)
+        public Structure(PictureBox Pic)
         {
             this.Pic = Pic;
             this.Collider = new Collider(Pic);
+            Position = Pic.Location;
         }
 
         public void Move(Point point)

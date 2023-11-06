@@ -14,8 +14,9 @@ namespace MyGameLibrary
     {
 
         public List<Enemy> Enemies { get; set; }
+        public List<NPC> npcs { get; set; }
         public List<Item> Items { get; set; }
-        public List<Wall> Walls { get; set; }
+        public List<Structure> Structures { get; set; }
         
 
 
@@ -35,16 +36,17 @@ namespace MyGameLibrary
         {
             Terrain = new Terrain(Seed, SeedAmp);
             Enemies = new List<Enemy>();
+            npcs = new List<NPC>();
             Items = new List<Item>();
-            Walls = new List<Wall>();
+            Structures = new List<Structure>();
             AdjacentAreas = new Dictionary<Direction, int>();
             TravelSigns = new Dictionary<Direction, TravelSign>();
             this.AreaName = AreaName;
             this.Visited = false;
         }
-        public void AddWall(Wall wall)
+        public void AddStructure(Structure structure)
         {
-            this.Walls.Add(wall);
+            this.Structures.Add(structure);
 
         }
 
@@ -56,6 +58,11 @@ namespace MyGameLibrary
         public void AddEnemy(Enemy enemy)
         {
             this.Enemies.Add(enemy);
+        }
+
+        public void AddNPC(NPC npc)
+        {
+            this.npcs.Add(npc);
         }
 
         public void SetAdjacentArea(Direction direction, int area)

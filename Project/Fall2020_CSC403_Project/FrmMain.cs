@@ -35,34 +35,43 @@ namespace Fall2020_CSC403_Project
             BackgroundImg.SizeMode = PictureBoxSizeMode.StretchImage;
             BackgroundImg.Size = new Size(width, height);
 
-            // Add Buttons For Start, Settins and Exit
+            // Add Buttons For Start, Settings and Exit
             Button StartButton = new Button();
             Button SettingsButton = new Button();
+            Button LeaderboardButton = new Button();
             Button ExitButton = new Button();
 
-            StartButton.Location = new Point(0 + (width / 18), 0 + (height / 2));
-            SettingsButton.Location = new Point(0 + (width / 18), 0 + ((5 * height) / 8));
-            ExitButton.Location = new Point(0 + (width / 18), 0 + (6 * height / 8));
+            StartButton.Location = new Point(0 + (width / 18), 0 + ((4 * height) / 9));
+            SettingsButton.Location = new Point(0 + (width / 18), 0 + ((5 * height) / 9));
+            LeaderboardButton.Location = new Point(0 + (width / 18), 0 + (6 * height / 9));
+            ExitButton.Location = new Point(0 + (width / 18), 0 + (7 * height / 9));
+            
 
             StartButton.Parent = BackgroundImg;
             SettingsButton.Parent = BackgroundImg;
+            LeaderboardButton.Parent = BackgroundImg;
             ExitButton.Parent = BackgroundImg;
 
             StartButton.Size = new Size(width / 3, height / 10);
             SettingsButton.Size = new Size(width / 3, height / 10);
+            LeaderboardButton.Size = new Size(width / 3, height / 10);
             ExitButton.Size = new Size(width / 3, height / 10);
 
             StartButton.Text = ("Start Game");
             SettingsButton.Text = ("Settings");
+            LeaderboardButton.Text = ("Leaderboard");
             ExitButton.Text = ("Quit Game");
 
             StartButton.Font = new Font("NSimSun", StartButton.Size.Height / 2);
             SettingsButton.Font = new Font("NSimSun", SettingsButton.Size.Height / 2);
+            LeaderboardButton.Font = new Font("NSimSun", ExitButton.Size.Height / 2);
             ExitButton.Font = new Font("NSimSun", ExitButton.Size.Height / 2);
 
             StartButton.Click += StartButton_Click;
             SettingsButton.Click += SettingsButton_Click;
+            LeaderboardButton.Click += LeaderboardButton_Click;
             ExitButton.Click += ExitButton_Click;
+
 
             // Add Title
             PictureBox TitleImage = new PictureBox();
@@ -103,12 +112,17 @@ namespace Fall2020_CSC403_Project
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-/*            FrmLevel frmlevel = new FrmLevel(this);
-            frmlevel.FormClosed += (s, args) => this.Close(); 
-            frmlevel.Show();*/
             FrmPlayerSelect frmplayerselect = new FrmPlayerSelect(this);
             frmplayerselect.FormClosed += (s, args) => this.Close(); // Handle closure of FrmLevel to close the application
             frmplayerselect.Show();
+            this.Hide(); // Hide the FrmMain form
+        }
+
+        private void LeaderboardButton_Click(object sender, EventArgs e)
+        {
+            FrmLeaderboard leaderboard = new FrmLeaderboard();
+            leaderboard.FormClosed += (s, args) => this.Close(); // Handle closure of FrmLeaderboard to close the application
+            leaderboard.Show();
             this.Hide(); // Hide the FrmMain form
         }
 

@@ -48,12 +48,12 @@ namespace Fall2020_CSC403_Project {
             // 
             this.lblInGameTime.AutoSize = true;
             this.lblInGameTime.BackColor = System.Drawing.Color.Black;
-            this.lblInGameTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblInGameTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblInGameTime.ForeColor = System.Drawing.Color.White;
-            this.lblInGameTime.Location = new System.Drawing.Point(16, 11);
+            this.lblInGameTime.Location = new System.Drawing.Point(20, 15);
             this.lblInGameTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblInGameTime.Name = "lblInGameTime";
-            this.lblInGameTime.Size = new System.Drawing.Size(46, 18);
+            this.lblInGameTime.Size = new System.Drawing.Size(70, 26);
             this.lblInGameTime.TabIndex = 2;
             this.lblInGameTime.Text = "label1";
             // 
