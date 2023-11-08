@@ -17,11 +17,12 @@ namespace Fall2020_CSC403_Project
 
         public FrmSettings(Form previous)
         {
+            previousForm = previous;
             this.WindowState = FormWindowState.Maximized;
             InitializeComponent();
             this.setup();
 
-            previousForm = previous;
+            
         }
         private void setup()
         {
@@ -52,8 +53,26 @@ namespace Fall2020_CSC403_Project
             ReturnButton.Click += ReturnButton_Click;
             ExitButton.Click += ExitButton_Click;
 
+            if (this.previousForm.Name != "FrmMain")
+            {
+                Button SaveButton = new Button();
+                SaveButton.Location = new Point((width / 3), (2 * height / 8));
+                SaveButton.Size = new Size(width / 3, height / 10);
+                SaveButton.Text = ("Save");
+                SaveButton.Font = new Font("NSimSun", ReturnButton.Size.Height / 2);
+                SaveButton.Parent = this;
+                SaveButton.Click += SaveButton_Click;
 
+                ExitButton.Location = new Point((width / 3), (3 * height / 8));
+            }
+        }
 
+        private void SaveButton_Click(object sender, EventArgs e)
+        {
+            FrmSave frmsave = new FrmSave(this);
+            frmsave.FormClosed += (s, args) => this.Close();
+            frmsave.Show();
+            this.Hide();
         }
 
 
