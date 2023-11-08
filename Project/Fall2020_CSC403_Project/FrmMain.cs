@@ -36,38 +36,38 @@ namespace Fall2020_CSC403_Project
             BackgroundImg.Size = new Size(width, height);
 
             // Add Buttons For Start, Settings and Exit
-            Button StartButton = new Button();
+            Button NewGameButton = new Button();
             Button SettingsButton = new Button();
             Button LeaderboardButton = new Button();
             Button ExitButton = new Button();
 
-            StartButton.Location = new Point(0 + (width / 18), 0 + ((4 * height) / 9));
-            LeaderboardButton.Location = new Point(0 + (width / 18), 0 + (5 * height / 9));
-            SettingsButton.Location = new Point(0 + (width / 18), 0 + ((6 * height) / 9));
-            ExitButton.Location = new Point(0 + (width / 18), 0 + (7 * height / 9));
+            NewGameButton.Location = new Point(0 + (width / 18), 0 + ((4 * height) / 10));
+            LeaderboardButton.Location = new Point(0 + (width / 18), 0 + (6 * height / 10));
+            SettingsButton.Location = new Point(0 + (width / 18), 0 + ((7 * height) / 10));
+            ExitButton.Location = new Point(0 + (width / 18), 0 + (8 * height / 10));
             
 
-            StartButton.Parent = BackgroundImg;
+            NewGameButton.Parent = BackgroundImg;
             LeaderboardButton.Parent = BackgroundImg;
             SettingsButton.Parent = BackgroundImg;
             ExitButton.Parent = BackgroundImg;
 
-            StartButton.Size = new Size(width / 3, height / 10);
-            LeaderboardButton.Size = new Size(width / 3, height / 10);
-            SettingsButton.Size = new Size(width / 3, height / 10);
-            ExitButton.Size = new Size(width / 3, height / 10);
+            NewGameButton.Size = new Size(width / 3, height / 11);
+            LeaderboardButton.Size = new Size(width / 3, height / 11);
+            SettingsButton.Size = new Size(width / 3, height / 11);
+            ExitButton.Size = new Size(width / 3, height / 11);
 
-            StartButton.Text = ("Start Game");
+            NewGameButton.Text = ("New Game");
             LeaderboardButton.Text = ("Leaderboard");
             SettingsButton.Text = ("Settings");
             ExitButton.Text = ("Quit Game");
 
-            StartButton.Font = new Font("NSimSun", StartButton.Size.Height / 2);
+            NewGameButton.Font = new Font("NSimSun", NewGameButton.Size.Height / 2);
             LeaderboardButton.Font = new Font("NSimSun", LeaderboardButton.Size.Height / 2);
             SettingsButton.Font = new Font("NSimSun", SettingsButton.Size.Height / 2);
             ExitButton.Font = new Font("NSimSun", ExitButton.Size.Height / 2);
 
-            StartButton.Click += StartButton_Click;
+            NewGameButton.Click += NewGameButton_Click;
             LeaderboardButton.Click += LeaderboardButton_Click;
             SettingsButton.Click += SettingsButton_Click;
             ExitButton.Click += ExitButton_Click;
@@ -80,7 +80,7 @@ namespace Fall2020_CSC403_Project
             TitleImage.Size = new Size(width / 3, height / 3);
             TitleImage.SizeMode = PictureBoxSizeMode.StretchImage;
             TitleImage.SizeMode = PictureBoxSizeMode.StretchImage;
-            TitleImage.Location = new Point(0 + (width / 18), 0 + (height / 8));
+            TitleImage.Location = new Point(0 + (width / 18), 0 + (height / 11));
             TitleImage.BackColor = Color.Transparent;
 
             // Add Instructions
@@ -110,7 +110,7 @@ namespace Fall2020_CSC403_Project
             this.Hide(); // Hide the FrmMain form
         }
 
-        private void StartButton_Click(object sender, EventArgs e)
+        private void NewGameButton_Click(object sender, EventArgs e)
         {
             FrmPlayerSelect frmplayerselect = new FrmPlayerSelect(this);
             frmplayerselect.FormClosed += (s, args) => this.Close(); // Handle closure of FrmLevel to close the application
