@@ -67,9 +67,6 @@ namespace Fall2020_CSC403_Project
             }
         }
 
-
-    }
-
         private void FrmSettings_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
@@ -83,6 +80,7 @@ namespace Fall2020_CSC403_Project
                 default:
                     break;
             }
+        }
         private void SaveButton_Click(object sender, EventArgs e)
         {
             FrmSave frmsave = new FrmSave(this);
