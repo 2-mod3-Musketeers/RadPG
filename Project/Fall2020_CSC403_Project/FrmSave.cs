@@ -151,17 +151,24 @@ namespace Fall2020_CSC403_Project
 
             screenshot = screenshot.Clone(cropArea, screenshot.PixelFormat);
 
-            Slot1.Image = screenshot;
+            //screenshot.Save("../../data/slot1.png");
 
-            Slot1.Dispose();
+            string[] data = new string[7];
 
-            // screenshot.Save("../../data/slot1.png");
-
-            string[] data = new string[2];
-
-            data[0] = JsonSerializer.Serialize(Game.Areas);
+            data[0] = JsonSerializer.Serialize(Game.player);
+            data[1] = JsonSerializer.Serialize(Game.Areas);
+            data[2] = JsonSerializer.Serialize(Game.CurrentArea);
+            data[3] = JsonSerializer.Serialize(Game.Items);
+            data[4] = JsonSerializer.Serialize(Game.Enemies);
+            data[5] = JsonSerializer.Serialize(Game.NPCs);
+            data[6] = JsonSerializer.Serialize(Game.TravelSigns);
 
             File.WriteAllLines(filepath, data);
+
+            this.Hide();
+            previousForm.Show();
+
+            
         }
 
         private void Slot2_Click(object sender, EventArgs e)

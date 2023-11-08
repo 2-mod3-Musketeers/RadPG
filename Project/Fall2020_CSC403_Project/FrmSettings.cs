@@ -55,6 +55,7 @@ namespace Fall2020_CSC403_Project
 
             if (this.previousForm.Name != "FrmMain")
             {
+
                 Button SaveButton = new Button();
                 SaveButton.Location = new Point((width / 3), (2 * height / 8));
                 SaveButton.Size = new Size(width / 3, height / 10);
@@ -62,8 +63,10 @@ namespace Fall2020_CSC403_Project
                 SaveButton.Font = new Font("NSimSun", ReturnButton.Size.Height / 2);
                 SaveButton.Parent = this;
                 SaveButton.Click += SaveButton_Click;
+                SaveButton.TabIndex = 2;
 
                 ExitButton.Location = new Point((width / 3), (3 * height / 8));
+                ExitButton.TabIndex = 3;
             }
         }
 
