@@ -63,6 +63,16 @@ namespace Fall2020_CSC403_Project.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap area_bar {
+            get {
+                object obj = ResourceManager.GetObject("area_bar", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap BackgroundForRPG3 {
             get {
                 object obj = ResourceManager.GetObject("BackgroundForRPG3", resourceCulture);
@@ -240,6 +250,46 @@ namespace Fall2020_CSC403_Project.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icon_armor {
+            get {
+                object obj = ResourceManager.GetObject("icon_armor", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_damage {
+            get {
+                object obj = ResourceManager.GetObject("icon_damage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_health {
+            get {
+                object obj = ResourceManager.GetObject("icon_health", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_speed {
+            get {
+                object obj = ResourceManager.GetObject("icon_speed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Instrucitons {
             get {
                 object obj = ResourceManager.GetObject("Instrucitons", resourceCulture);
@@ -360,6 +410,16 @@ namespace Fall2020_CSC403_Project.Properties {
         internal static System.Drawing.Bitmap speed_potion {
             get {
                 object obj = ResourceManager.GetObject("speed_potion", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap status_bar_bg {
+            get {
+                object obj = ResourceManager.GetObject("status_bar_bg", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

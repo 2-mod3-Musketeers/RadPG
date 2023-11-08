@@ -192,10 +192,17 @@
     <Folder Include="code\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Transparent.png" />
     <None Include="Resources\harold1.png" />
     <None Include="data\travel_sign.png" />
     <None Include="data\house_L.png" />
     <None Include="data\house_long.png" />
+    <None Include="data\area_bar.png" />
+    <None Include="data\status_bar_bg.png" />
+    <None Include="data\icon_armor.png" />
+    <None Include="data\icon_damage.png" />
+    <None Include="data\icon_health.png" />
+    <None Include="data\icon_speed.png" />
     <Content Include="gfgLogoIco.ico" />
     <None Include="data\wall_cobblestone.png" />
     <None Include="data\wall_bricks.png" />

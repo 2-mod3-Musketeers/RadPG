@@ -18,7 +18,7 @@ namespace Fall2020_CSC403_Project.code
         int baseDefense { get; }
         int baseDamage { get; }
         int baseSpeed { get; }
-        int hitMod { get; }
+        int hitMod { get; set; }
 
         void specialMove(Character target);
 
@@ -44,7 +44,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDefense { get; }
         public int baseDamage { get; }
         public int baseSpeed { get; }
-        public int hitMod { get; }
+        public int hitMod { get; set; }
 
         public Tank()
         {
@@ -67,7 +67,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDefense { get; }
         public int baseDamage { get; }
         public int baseSpeed { get; }
-        public int hitMod { get; }
+        public int hitMod { get; set; }
 
         public Rogue()
         {
@@ -92,7 +92,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDefense { get; }
         public int baseDamage { get; }
         public int baseSpeed { get; }
-        public int hitMod { get; }
+        public int hitMod { get; set; }
 
         public Swordsman()
         {
@@ -117,7 +117,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDefense { get; }
         public int baseDamage { get; }
         public int baseSpeed { get; }
-        public int hitMod { get; }
+        public int hitMod { get; set; }
 
         public Healer()
         {
@@ -144,7 +144,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDefense { get; }
         public int baseDamage { get; }
         public int baseSpeed { get; }
-        public int hitMod { get; }
+        public int hitMod { get; set; }
 
         public Minion()
         {
@@ -168,7 +168,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDefense { get; }
         public int baseDamage { get; }
         public int baseSpeed { get; }
-        public int hitMod { get; }
+        public int hitMod { get; set; }
 
         public Coward()
         {
@@ -192,7 +192,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDefense { get; }
         public int baseDamage { get; }
         public int baseSpeed { get; }
-        public int hitMod { get; }
+        public int hitMod { get; set; }
 
         public Brute()
         {
@@ -215,7 +215,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDefense { get; }
         public int baseDamage { get; }
         public int baseSpeed { get; }
-        public int hitMod { get; }
+        public int hitMod { get; set; }
 
         public Zombie()
         {
@@ -238,7 +238,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDefense { get; }
         public int baseDamage { get; }
         public int baseSpeed { get; }
-        public int hitMod { get; }
+        public int hitMod { get; set; }
 
         public Bees()
         {
@@ -261,7 +261,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDefense { get; }
         public int baseDamage { get; }
         public int baseSpeed { get; }
-        public int hitMod { get; }
+        public int hitMod { get; set; }
 
         public Mage()
         {
@@ -284,7 +284,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDefense { get; }
         public int baseDamage { get; }
         public int baseSpeed { get; }
-        public int hitMod { get; }
+        public int hitMod { get; set; }
 
         public Whelp()
         {
@@ -307,7 +307,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDefense { get; }
         public int baseDamage { get; }
         public int baseSpeed { get; }
-        public int hitMod { get; }
+        public int hitMod { get; set; }
 
         public Boss()
         {
@@ -330,7 +330,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDefense { get; }
         public int baseDamage { get; }
         public int baseSpeed { get; }
-        public int hitMod { get; }
+        public int hitMod { get; set; }
 
         public Dragon()
         {

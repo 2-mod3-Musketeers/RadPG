@@ -16,8 +16,8 @@ namespace Fall2020_CSC403_Project.code
         public List<Tile> Tiles { get; set; }
 
         public static Size TileSize = new Size(Screen.PrimaryScreen.Bounds.Width / 35, Screen.PrimaryScreen.Bounds.Width / 35);
-        public static int GridWidth = Screen.PrimaryScreen.Bounds.Width / TileSize.Width;
-        public static int GridHeight = Screen.PrimaryScreen.Bounds.Height / TileSize.Width;
+        public static int GridWidth = Screen.PrimaryScreen.Bounds.Width / TileSize.Width + 1;
+        public static int GridHeight = GridWidth;
 
 
         public Terrain (int Seed, double SeedAmplification)

@@ -48,22 +48,30 @@ namespace Fall2020_CSC403_Project.code
 			this.dice = new Random();
 		}
 		
-		public void OnAttack(int defense)
+		public string OnAttack(int defense)
 		{
             int hit = this.dice.Next(1, 21);
-            Console.WriteLine(this.Name + " hit : " + hit);
+			string log;
+			int damage;
+			log = this.Name + " hit : " + hit;
             if (hit == 20)
 			{
-				Console.WriteLine(this.Name + " criticaly hit!");
-				AttackEvent(this.damage * 2 + this.dice.Next(1, this.archetype.baseDamage + 1));
-				return;
+				damage = this.damage * 2 + this.dice.Next(1, this.archetype.baseDamage + 1);
+                AttackEvent(damage);
+				log = this.Name + " criticaly hit for " + damage + "!";
 			}
             else if (hit + this.archetype.hitMod >= defense)
 			{
-                Console.WriteLine(this.Name + " hits for: " + (hit+this.archetype.hitMod));
-                AttackEvent(this.damage + this.dice.Next(1, this.archetype.baseDamage + 1));
+				damage = this.damage + this.dice.Next(1, this.archetype.baseDamage + 1);
+                AttackEvent(damage);
+                log = this.Name + " hits for " + damage;
             }
-		}
+			else
+			{
+				log = this.Name + " missed!";
+			}
+			return log;
+        }
 
         public void TakeDamage(int amount)
 		{
@@ -111,7 +119,9 @@ namespace Fall2020_CSC403_Project.code
 				case PotionTypes.Speed:
 					this.speed += stat;
 					break;
-
+				case PotionTypes.Accuracy:
+					this.archetype.hitMod += stat;
+					break;
 				default:
 					break;
 			}

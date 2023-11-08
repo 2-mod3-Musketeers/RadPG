@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Media;
 using System.Text.Json;
 using System.IO;
+using System.Drawing.Drawing2D;
 
 namespace Fall2020_CSC403_Project
 {
@@ -37,6 +38,19 @@ namespace Fall2020_CSC403_Project
 
         public Label ScoreLabel;
 
+        public int height = Screen.PrimaryScreen.Bounds.Height;
+        public int width = Screen.PrimaryScreen.Bounds.Width;
+
+        private Label playerHealthMax;
+        public Label playerCurrentHealth;
+
+        private Label location;
+
+        public Label speed_label;
+        public Label def_label;
+        public Label damage_label;
+
+
         public FrmLevel(Form MainMenu)
         {
             this.KeyPreview = true;
@@ -56,23 +70,25 @@ namespace Fall2020_CSC403_Project
             this.AreaNum = 4;
 
 
-
         }
 
 
         private void FrmLevel_Load(object sender, EventArgs e)
         {
+
+            
+
             Game.Areas = new Area[10];
             Game.Areas[0] = new Area("Malek's Mountain", 12, 0.05);
             Game.Areas[1] = new Area("Village Ruins", 901, 0.05);
             Game.Areas[2] = new Area("Buddy Beachfront", 890, 0.05);
             Game.Areas[3] = new Area("Uphill Hill", 789, 0.05);
             Game.Areas[4] = new Area("Plainsfield", 678, 0.05);
-            Game.Areas[5] = new Area("Lower Harmony Village", 567, 0.05);
+            Game.Areas[5] = new Area("Lower Harmony Village", 567, 0.18);
             Game.Areas[6] = new Area("Windy Plateau", 456, 0.05);
             Game.Areas[7] = new Area("Harmony Plains", 345, 0.05);
-            Game.Areas[8] = new Area("Harmony Village", 623, 0.15);
-            Game.Areas[9] = new Area("Dragon's Lair", 123, 0.2);
+            Game.Areas[8] = new Area("Harmony Village", 623, 0.14);
+            Game.Areas[9] = new Area("Dragon's Lair", 123, 0.22);
 
             Game.CurrentArea = Game.Areas[this.AreaNum];
 
@@ -86,18 +102,174 @@ namespace Fall2020_CSC403_Project
             InitializeAreaLayout();
             timeBegin = DateTime.Now;
 
+            this.BackColor = Color.SlateGray;
+
+            // Add bar to top of screen that will hold status
+            Label StatusBar = new Label();
+            StatusBar.Size = new Size(width, height / 14);
+            StatusBar.Parent = this;
+            StatusBar.BackColor = this.BackColor;
+            StatusBar.BackgroundImage = Properties.Resources.status_bar_bg;
+
+            // Add name to status bar
+            Label NameLabel = new Label();
+            NameLabel.Parent = StatusBar;
+            NameLabel.BackColor = Color.Transparent;
+            NameLabel.ForeColor = Color.White;
+            NameLabel.Size = new Size(width/3, 7*StatusBar.Height/8);
+            NameLabel.Location = new Point(0, NameLabel.Size.Height-height/18);
+            NameLabel.TextAlign = ContentAlignment.MiddleCenter;
+            NameLabel.Font = new Font("NSimSun", 3*NameLabel.Size.Height / 4, FontStyle.Bold);
+            NameLabel.Text =Game.player.Name.ToString();
+            NameLabel.BringToFront();
+
+            // Add character Health Bar
+            PictureBox health_stat = new PictureBox();
+            health_stat.Parent = StatusBar;
+            health_stat.Size = new Size(height / 22, height / 22);
+            health_stat.SizeMode = PictureBoxSizeMode.StretchImage;
+            health_stat.Location = new Point(2 * width / 3, height / 64);
+            health_stat.Image = Properties.Resources.icon_health;
+            health_stat.BackColor= Color.Transparent;
+            health_stat.BringToFront();
+            
+
+            playerHealthMax = new Label();
+            playerCurrentHealth = new Label();
+
+            playerCurrentHealth.Size = new Size(width/7-health_stat.Size.Width, height/22);
+            playerCurrentHealth.Parent = this;
+            playerCurrentHealth.Location = new Point(health_stat.Location.X+health_stat.Size.Width, health_stat.Location.Y);
+            playerCurrentHealth.Font = new Font("NSimSun", 3 * playerCurrentHealth.Size.Height / 8);
+            playerCurrentHealth.TextAlign = ContentAlignment.MiddleCenter;
+            playerCurrentHealth.BackColor = Color.Green;
+            playerCurrentHealth.AutoSize = false;
+
+            playerHealthMax.Size = playerCurrentHealth.Size;
+            playerHealthMax.Parent = this;
+            playerHealthMax.Location = playerCurrentHealth.Location;
+            playerHealthMax.Font = new Font("NSimSun", 3 * playerCurrentHealth.Size.Height / 8);
+            playerHealthMax.BackColor = Color.Red;
+            playerHealthMax.AutoSize = false;
+
+            playerHealthMax.BringToFront();
+            playerCurrentHealth.BringToFront();
+
+            UpdateHealthBars(playerCurrentHealth);
+
+            // Add images for stats
+            PictureBox speed_stat = new PictureBox();
+            PictureBox def_stat = new PictureBox();
+            PictureBox damage_stat = new PictureBox();
+
+            speed_stat.Parent = StatusBar;
+            def_stat.Parent = StatusBar;
+            damage_stat.Parent = StatusBar;
+
+            damage_stat.Size = new Size(playerHealthMax.Size.Height, playerHealthMax.Size.Height);
+            damage_stat.SizeMode = PictureBoxSizeMode.StretchImage;
+            damage_stat.BackColor = Color.Transparent;
+            damage_stat.Image = Properties.Resources.icon_damage;
+            damage_stat.Location = new Point(playerHealthMax.Location.X+playerHealthMax.Width+damage_stat.Size.Width/3, height/64);
+
+            def_stat.Size = damage_stat.Size;
+            def_stat.SizeMode = PictureBoxSizeMode.StretchImage;
+            def_stat.BackColor = Color.Transparent;
+            def_stat.Image = Properties.Resources.icon_armor;
+            def_stat.Location = new Point(damage_stat.Location.X + 2*damage_stat.Width + damage_stat.Size.Width / 3, height / 64);
+
+            speed_stat.Size = damage_stat.Size;
+            speed_stat.SizeMode = PictureBoxSizeMode.StretchImage;
+            speed_stat.BackColor = Color.Transparent;
+            speed_stat.Image = Properties.Resources.icon_speed;
+            speed_stat.Location = new Point(def_stat.Location.X + 2 * def_stat.Width + def_stat.Size.Width / 3, height / 64);
+
+            // Add labels for stats
+
+            speed_label = new Label();
+            def_label = new Label();
+            damage_label = new Label();
+
+            speed_label.Parent = StatusBar;
+            def_label.Parent = StatusBar;
+            damage_label.Parent = StatusBar;
+
+            damage_label.Size = new Size(playerHealthMax.Size.Height, playerHealthMax.Size.Height);
+            damage_label.BackColor = Color.Transparent;
+            damage_label.ForeColor = Color.White;
+            damage_label.Location = new Point(damage_stat.Location.X+damage_stat.Size.Width, height / 64);
+            damage_label.TextAlign = ContentAlignment.MiddleCenter;
+            damage_label.Font = new Font("NSimSun", playerCurrentHealth.Size.Height / 2, FontStyle.Bold);
+
+            def_label.Size = damage_stat.Size;
+            def_label.BackColor = Color.Transparent;
+            def_label.ForeColor = Color.White;
+            def_label.Location = new Point(def_stat.Location.X + def_stat.Size.Width, height / 64);
+            def_label.TextAlign = ContentAlignment.MiddleCenter;
+            def_label.Font = new Font("NSimSun", playerCurrentHealth.Size.Height / 2, FontStyle.Bold);
+
+            speed_label.Size = damage_stat.Size;
+            speed_label.BackColor = Color.Transparent;
+            speed_label.ForeColor = Color.White;
+            speed_label.Location = new Point(speed_stat.Location.X + speed_stat.Size.Width, height / 64);
+            speed_label.TextAlign = ContentAlignment.MiddleCenter;
+            speed_label.Font = new Font("NSimSun", playerCurrentHealth.Size.Height / 2, FontStyle.Bold);
+
+            UpdateStatusBar(def_label, damage_label, speed_label);
+
+            //Move inventory and labels
+            InvPicButton.Location = new Point(InvPicButton.Location.X, InvPicButton.Location.Y+StatusBar.Height);
+            lblInGameTime.Location = new Point(lblInGameTime.Location.X, lblInGameTime.Location.Y + StatusBar.Height);
+
             this.ScoreLabel = new Label();
             this.Controls.Add(ScoreLabel);
             ScoreLabel.BackColor = Color.Black;
             ScoreLabel.ForeColor = Color.White;
             ScoreLabel.Text = "Score: " + score.ToString();
-            ScoreLabel.Location = new Point(Screen.PrimaryScreen.Bounds.Width - ScoreLabel.Width - 20, 15);
+            ScoreLabel.Location = new Point(Screen.PrimaryScreen.Bounds.Width - ScoreLabel.Width - 20, lblInGameTime.Location.Y);
             ScoreLabel.Font = new Font("Microsoft Sans Serif", 11);
             ScoreLabel.Visible = true;
             ScoreLabel.BringToFront();
-            
-            
-            
+
+            // Add signboard
+            PictureBox SignBoard = new PictureBox();
+            SignBoard.BackColor = Color.Transparent;
+            SignBoard.Parent = this;
+            SignBoard.Size = new Size(width / 3, height / 14);
+            SignBoard.SizeMode = PictureBoxSizeMode.StretchImage;
+            SignBoard.Location = new Point(width / 3, 0);
+            SignBoard.Image = Properties.Resources.area_bar;
+            SignBoard.BackgroundImage = Properties.Resources.status_bar_bg;
+            SignBoard.BringToFront();
+
+            // Add location
+            location = new Label();
+            location.Parent = SignBoard;
+            location.BackColor = Color.Transparent;
+            location.ForeColor = Color.White;
+            location.Size = new Size(width / 5, height / 14);
+            location.Location = new Point(SignBoard.Size.Width / 2 - location.Size.Width / 2, 0);
+            location.AutoSize = false;
+            location.TextAlign = ContentAlignment.MiddleCenter;
+            location.Text = Game.CurrentArea.AreaName.ToString();
+            location.Font = new Font("NSimSun", 10);
+
+            using (Graphics g = location.CreateGraphics())
+            {
+                Size proposedSize = new Size(int.MaxValue, int.MaxValue);
+                for (int fontSize = 100; fontSize >= 8; fontSize--)
+                {
+                    Font testFont = new Font("NSimSun", fontSize);
+                    Size textSize = TextRenderer.MeasureText(g, location.Text, testFont, proposedSize, TextFormatFlags.WordBreak);
+
+                    if (textSize.Width <= location.Width && textSize.Height <= location.Height)
+                    {
+                        location.Font = testFont; // Set the font size that fits
+                        break;
+                    }
+                }
+            }
+
 
             //Adding stop condition to mainMenu_music here
             FrmMain mainMenuPlayer = Application.OpenForms["FrmMain"] as FrmMain;
@@ -115,6 +287,7 @@ namespace Fall2020_CSC403_Project
             SignPanel.Location = new Point(Screen.PrimaryScreen.Bounds.Width / 2 - SignPanel.Width / 2, 0);
 
             TravelLabel.Size = new Size(SignPanel.Size.Width, SignPanel.Size.Height / 2);
+            TravelLabel.Font = new Font("NSimSun", TravelLabel.Size.Height / 4);
             TravelLabel.Location = new Point(Screen.PrimaryScreen.Bounds.Width / 2 - TravelLabel.Width / 2, 0);
 
             TravelButton.Size = new Size(SignPanel.Size.Width - 200, SignPanel.Size.Height / 4);
@@ -145,6 +318,7 @@ namespace Fall2020_CSC403_Project
                     }
                 }
                 this.BackgroundImage = combinedImage;
+                this.BackgroundImageLayout = ImageLayout.None;
 
                 if (Game.CurrentArea.TravelSigns != null)
                 {
@@ -241,7 +415,7 @@ namespace Fall2020_CSC403_Project
 
                 case Keys.E:
                     Game.player.ResetMoveSpeed();
-                    frminventory = FrmInventory.GetInstance();
+                    frminventory = FrmInventory.GetInstance(this);
                     frminventory.Show();
                     break;
 
@@ -276,6 +450,14 @@ namespace Fall2020_CSC403_Project
             // move Game.playerd
             Game.player.Move();
 
+            if (Game.player.Position.x < 0 || 
+                Game.player.Position.x > Screen.PrimaryScreen.Bounds.Width - Game.player.Pic.Size.Width ||
+                Game.player.Position.y < Screen.PrimaryScreen.Bounds.Height * 1/12 ||
+                Game.player.Position.y > Screen.PrimaryScreen.Bounds.Height - Game.player.Pic.Size.Height - 40)
+            {
+                Game.player.MoveBack();
+            }
+
             // check collision with walls
             if (HitAWall(Game.player))
             {
@@ -287,7 +469,6 @@ namespace Fall2020_CSC403_Project
             if (x >= 0)
             {
                 Fight(Game.CurrentArea.Enemies[x]);
-
 
             }
 
@@ -362,6 +543,16 @@ namespace Fall2020_CSC403_Project
             return hitAWall;
         }
 
+        public void UpdateHealthBars(Label playerCurrentHealth)
+        {
+            // for player
+            float playerHealthPer = Game.player.Health / (float)Game.player.MaxHealth;
+            int MAX_HEALTHBAR_WIDTH = playerHealthMax.Width;
+            playerCurrentHealth.BackColor = Color.Green;
+            playerCurrentHealth.Width = (int)(MAX_HEALTHBAR_WIDTH * playerHealthPer);
+            playerCurrentHealth.Text = Game.player.Health.ToString();
+        }
+
         private int hitEnemy(Player you)
         {
             if (Game.CurrentArea.Enemies == null)
@@ -428,7 +619,7 @@ namespace Fall2020_CSC403_Project
         public int InATile(Player you)
         {
             int x = ((int)you.Position.x + you.Pic.Width / 2) / Terrain.TileSize.Width;
-            int y = ((int)you.Position.y + you.Pic.Height) / Terrain.TileSize.Width;
+            int y = ((int)you.Position.y + you.Pic.Height - 10) / Terrain.TileSize.Width;
 
             int a = (int)((x) + Math.Floor((double)y * Terrain.GridWidth));
 
@@ -442,6 +633,7 @@ namespace Fall2020_CSC403_Project
             Game.player.MoveBack();
             frmBattleScreen = FrmBattleScreen.GetInstance(this, enemy);
             frmBattleScreen.Show();
+            UpdateHealthBars(playerCurrentHealth);
         }
 
         public void RemoveEnemy(Enemy enemy)
@@ -450,6 +642,7 @@ namespace Fall2020_CSC403_Project
             Game.CurrentArea.Enemies.Remove(enemy);
             score += 100;
             ScoreLabel.Text = "Score: " + score.ToString();
+            UpdateHealthBars(playerCurrentHealth);
         }
 
         private void Converse(NPC npc)
@@ -641,7 +834,7 @@ namespace Fall2020_CSC403_Project
 
         private void Menu_Click(object sender, EventArgs e)
         {
-            frminventory = FrmInventory.GetInstance();
+            frminventory = FrmInventory.GetInstance(this);
             frminventory.Show();
         }
 
@@ -675,7 +868,7 @@ namespace Fall2020_CSC403_Project
             ExitButton.Enabled = false;
             MainMenuButton.Enabled = false;
 
-            this.AreaNum = 4;
+
             AreaSelect();
             InitializeAreaLayout();
         }
@@ -700,6 +893,7 @@ namespace Fall2020_CSC403_Project
         private void AreaSelect()
         {
             Game.CurrentArea = Game.Areas[this.AreaNum];
+
             switch (this.AreaNum)
             {
                 case 0:
@@ -777,11 +971,14 @@ namespace Fall2020_CSC403_Project
             Size L_Size = new Size(Terrain.TileSize.Width * 6, Terrain.TileSize.Height * 4);
             Size L_Size_rot90 = new Size(L_Size.Height, L_Size.Width);
 
-            Game.CurrentArea.AddStructure(new Structure(MakePictureBox(house_long_rot, new Point(Screen.PrimaryScreen.Bounds.Width * 3 / 4 - 100 , - 100), longSize_rot)));
-            Game.CurrentArea.AddStructure(new Structure(MakePictureBox(house_long, new Point(Screen.PrimaryScreen.Bounds.Width / 2, 400), longSize)));
-            Game.CurrentArea.AddStructure(new Structure(MakePictureBox(house_L, new Point(Screen.PrimaryScreen.Bounds.Width * 3 / 4, 300), L_Size)));
-            Game.CurrentArea.AddStructure(new Structure(MakePictureBox(house_L_rot180, new Point(Screen.PrimaryScreen.Bounds.Width * 1 / 4, 80), L_Size)));
+            Game.CurrentArea.AddStructure(Game.Structures["house_long_rot_1"]);
+            Game.CurrentArea.AddStructure(Game.Structures["house_long_1"]);
+            Game.CurrentArea.AddStructure(Game.Structures["house_L_1"]);
+            Game.CurrentArea.AddStructure(Game.Structures["house_L_rot180_1"]);
 
+            Game.CurrentArea.AddStructure(Game.Structures["VillageWall1"]);
+            Game.CurrentArea.AddStructure(Game.Structures["VillageWall2"]);
+            
 
         }
 
@@ -816,6 +1013,11 @@ namespace Fall2020_CSC403_Project
             }
             Game.CurrentArea.Visited = true;
 
+            Game.CurrentArea.AddStructure(Game.Structures["LowerVillageWall1"]);
+            Game.CurrentArea.AddStructure(Game.Structures["LowerVillageWall2"]);
+            Game.CurrentArea.AddStructure(Game.Structures["LowerVillageWall3"]);
+            Game.CurrentArea.AddStructure(Game.Structures["LowerVillageWall4"]);
+
         }
 
 
@@ -837,18 +1039,16 @@ namespace Fall2020_CSC403_Project
             Game.player.Pic.Visible = true;
 
 
-            Game.CurrentArea.AddItem(new Item("Sting", MakePictureBox(Resources.common_dagger, new Point(300, 200), itemSize), 5, Item.ItemType.Weapon));
-            Game.CurrentArea.AddItem(new Item("Lesser Heal", MakePictureBox(Resources.lesser_health_potion, new Point(500, 300), itemSize), 5, Item.ItemType.Utility, Item.PotionTypes.Healing));
-            Game.CurrentArea.AddItem(new Item("Armor of Noob", MakePictureBox(Resources.common_armor, new Point(880, 800), itemSize), 5, Item.ItemType.Armor));
-            Game.CurrentArea.AddItem(new Item("Potion of Speed", MakePictureBox(Resources.speed_potion, new Point(20, 400), itemSize), 10, Item.ItemType.Utility, Item.PotionTypes.Speed));
+            Game.CurrentArea.AddItem(Game.Items["Sting"]);
+            Game.CurrentArea.AddItem(Game.Items["Lesser Health Potion"]);
+            Game.CurrentArea.AddItem(Game.Items["Shabby Armor"]);
+            Game.CurrentArea.AddItem(Game.Items["Speed Potion"]);
 
-            Game.CurrentArea.AddEnemy(new Enemy("Poison Packet", MakePictureBox(Resources.enemy_poisonpacket, new Point(200, 500), new Size(100, 100)), new Minion()));
-            Game.CurrentArea.AddEnemy(new Enemy("Cheeto", MakePictureBox(Resources.enemy_cheetos, new Point(600, 200), new Size(75, 125)), new Minion()));
-            Game.CurrentArea.AddEnemy(new Enemy("BossKoolAid", MakePictureBox(Resources.enemy_koolaid, new Point(this.Width - 200, 100), new Size(150, 150)), new Boss()));
+            Game.CurrentArea.AddEnemy(Game.Enemies["Minion1"]);
+            Game.CurrentArea.AddEnemy(Game.Enemies["Minion2"]);
+            Game.CurrentArea.AddEnemy(Game.Enemies["Brute"]);
 
-            Game.CurrentArea.AddNPC(new NPC("Harold", MakePictureBox(Resources.harold, new Point(150, 150), new Size(75, 100)), new Healer()));
-            Game.CurrentArea.AddStructure(new Structure(MakePictureBox(Resources.wall_bricks, new Point(500, 500), new Size(20, 100))));
-            Game.CurrentArea.Structures[0].Pic.Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
+            Game.CurrentArea.AddNPC(Game.NPCs["Harold"]);
         }
 
         private void Area3()
@@ -896,6 +1096,13 @@ namespace Fall2020_CSC403_Project
 
         }
 
+        public void UpdateStatusBar(Label def, Label dmg, Label speed)
+        {
+            def.Text = Game.player.defense.ToString();
+            dmg.Text = Game.player.damage.ToString();
+            speed.Text = Game.player.speed.ToString();
+
+        }
 
         private void setAdjacency(int area)
         {
@@ -907,7 +1114,7 @@ namespace Fall2020_CSC403_Project
             if (up >= 0)
             {
                 Game.Areas[area].SetAdjacentArea(Direction.Up, up);
-                Game.Areas[area].SetTravelSign(Direction.Up, new TravelSign(Game.Areas[up].AreaName, MakePictureBox(Resources.travel_sign, new Point(Screen.PrimaryScreen.Bounds.Width / 2 - this.signSize.Width / 2, 10), this.signSize)));
+                Game.Areas[area].SetTravelSign(Direction.Up, new TravelSign(Game.Areas[up].AreaName, MakePictureBox(Resources.travel_sign, new Point(Screen.PrimaryScreen.Bounds.Width / 2 - this.signSize.Width / 2, height/12+10), this.signSize)));
             }
             if (down >= 0)
             {
@@ -940,7 +1147,7 @@ namespace Fall2020_CSC403_Project
                     Game.player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - Game.player.Pic.Width / 2, Screen.PrimaryScreen.Bounds.Height - signSize.Height - Game.player.Pic.Height  - 100));
                     break;
                 case Direction.Down:
-                    Game.player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - Game.player.Pic.Width / 2, signSize.Height + 20));
+                    Game.player.SetEntityPosition(new Position(Screen.PrimaryScreen.Bounds.Width / 2 - Game.player.Pic.Width / 2, height/12 + signSize.Height + 20));
                     break;
                 case Direction.Right:
                     Game.player.SetEntityPosition(new Position(signSize.Width + 10, Screen.PrimaryScreen.Bounds.Height / 2 - Game.player.Pic.Height / 2));
@@ -955,6 +1162,24 @@ namespace Fall2020_CSC403_Project
             }
 
             AreaSelect();
+
+            // reset text in status bar
+            location.Text = Game.CurrentArea.AreaName.ToString();
+            using (Graphics g = location.CreateGraphics())
+            {
+                Size proposedSize = new Size(int.MaxValue, int.MaxValue);
+                for (int fontSize = 100; fontSize >= 8; fontSize--)
+                {
+                    Font testFont = new Font("NSimSun", fontSize);
+                    Size textSize = TextRenderer.MeasureText(g, location.Text, testFont, proposedSize, TextFormatFlags.WordBreak);
+
+                    if (textSize.Width <= location.Width && textSize.Height <= location.Height)
+                    {
+                        location.Font = testFont; // Set the font size that fits
+                        break;
+                    }
+                }
+            }
 
 
             InitializeAreaLayout();

@@ -28,6 +28,10 @@ namespace Fall2020_CSC403_Project
         private Label enemyHealthMax;
         private Label enemyCurrentHealth;
 
+        private String[] BattleLog = new string[10];
+
+        public static FrmLevel frmLevel;
+
         public FrmBattleScreen(FrmLevel level)
         {
             this.WindowState = FormWindowState.Maximized;
@@ -133,6 +137,29 @@ namespace Fall2020_CSC403_Project
                 UtilityLabel.TextAlign = ContentAlignment.MiddleCenter;
             }
 
+            // Add user name and enemy name
+            Label EnemyName = new Label();
+            Label PlayerName = new Label();
+
+            // Set up enemy name label
+            EnemyName.Parent = this;
+            EnemyName.AutoSize = false;
+            EnemyName.BackColor = this.BackColor;
+            EnemyName.Text = enemy.Name.ToString();
+            EnemyName.Size = new Size(picEnemy.Size.Width, EnemyName.Size.Width / 2);
+            EnemyName.Location = new Point(picEnemy.Location.X, picEnemy.Location.Y - 2*EnemyName.Size.Height);
+            EnemyName.TextAlign = ContentAlignment.MiddleCenter;
+            EnemyName.Font = new Font("NSimSun", EnemyName.Size.Height / 2);
+
+            // set up player name label
+            PlayerName.Parent = this;
+            PlayerName.AutoSize = false;
+            PlayerName.BackColor = this.BackColor;
+            PlayerName.Text = player.Name.ToString();
+            PlayerName.Size = new Size(picPlayer.Size.Width, PlayerName.Size.Width / 2);
+            PlayerName.Location = new Point(picPlayer.Location.X, picPlayer.Location.Y - 2 * PlayerName.Size.Height);
+            PlayerName.TextAlign = ContentAlignment.MiddleCenter;
+            PlayerName.Font = new Font("NSimSun", PlayerName.Size.Height / 2);
 
             // Add character Health Bar
             playerHealthMax = new Label();
@@ -214,6 +241,8 @@ namespace Fall2020_CSC403_Project
 
         private void FleeButton_Click(object sender, EventArgs e)
         {
+            frmLevel.UpdateHealthBars(frmLevel.playerCurrentHealth);
+            enemy.OnAttack(player.defense);
             this.Close();
         }
 
@@ -249,19 +278,20 @@ namespace Fall2020_CSC403_Project
                 instance = null;
                 form.RemoveEnemy(enemy);
                 player.RemoveEffect();
+                frmLevel.UpdateHealthBars(frmLevel.playerCurrentHealth);
+                frmLevel.UpdateStatusBar(frmLevel.def_label, frmLevel.damage_label, frmLevel.speed_label);
                 Close();
             }
         }
 
         public static FrmBattleScreen GetInstance(FrmLevel level, Enemy enemy)
         {
-            if (instance == null)
-            {
-                instance = new FrmBattleScreen(level);
-                instance.enemy = enemy;
-                instance.Setup();
-            }
+            frmLevel = level;
+            instance = new FrmBattleScreen(level);
+            instance.enemy = enemy;
+            instance.Setup();
             return instance;
+           
         }
         private void EnemyDamage(int amount)
         {

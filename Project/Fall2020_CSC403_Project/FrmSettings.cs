@@ -21,11 +21,11 @@ namespace Fall2020_CSC403_Project
             this.WindowState = FormWindowState.Maximized;
             InitializeComponent();
             this.setup();
-
-            
+            this.KeyPreview = true;
         }
         private void setup()
         {
+            this.KeyDown += FrmSettings_KeyDown;
             this.BackColor = Color.DimGray;
 
             int height = Screen.PrimaryScreen.Bounds.Height;
@@ -67,6 +67,22 @@ namespace Fall2020_CSC403_Project
             }
         }
 
+
+    }
+
+        private void FrmSettings_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+
+                case Keys.Escape:
+                    previousForm.Show();
+                    this.Hide();
+                    break;
+
+                default:
+                    break;
+            }
         private void SaveButton_Click(object sender, EventArgs e)
         {
             FrmSave frmsave = new FrmSave(this);
