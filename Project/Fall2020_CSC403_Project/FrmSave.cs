@@ -151,7 +151,11 @@ namespace Fall2020_CSC403_Project
 
             screenshot = screenshot.Clone(cropArea, screenshot.PixelFormat);
 
-            //screenshot.Save("../../data/slot1.png");
+            Slot1.Image.Dispose();
+
+            screenshot.Save("../../data/slot1.png");
+
+            screenshot.Dispose();
 
             string[] data = new string[7];
 
@@ -167,23 +171,102 @@ namespace Fall2020_CSC403_Project
 
             this.Hide();
             previousForm.Show();
-
-            
         }
 
         private void Slot2_Click(object sender, EventArgs e)
         {
+            string filepath = "../../data/Save2Data.Json";
 
+            level.DrawToBitmap(screenshot, new Rectangle(new Point(0, 0), screenshot.Size));
+
+            Rectangle cropArea = new Rectangle(new Point(0, 40), level.ClientSize);
+
+            screenshot = screenshot.Clone(cropArea, screenshot.PixelFormat);
+
+            Slot2.Image.Dispose();
+
+            screenshot.Save("../../data/slot2.png");
+
+            screenshot.Dispose();
+
+            string[] data = new string[7];
+
+            data[0] = JsonSerializer.Serialize(Game.player);
+            data[1] = JsonSerializer.Serialize(Game.Areas);
+            data[2] = JsonSerializer.Serialize(Game.CurrentArea);
+            data[3] = JsonSerializer.Serialize(Game.Items);
+            data[4] = JsonSerializer.Serialize(Game.Enemies);
+            data[5] = JsonSerializer.Serialize(Game.NPCs);
+            data[6] = JsonSerializer.Serialize(Game.TravelSigns);
+
+            File.WriteAllLines(filepath, data);
+
+            this.Hide();
+            previousForm.Show();
         }
 
         private void Slot3_Click(object sender, EventArgs e)
         {
+            string filepath = "../../data/Save3Data.Json";
 
+            level.DrawToBitmap(screenshot, new Rectangle(new Point(0, 0), screenshot.Size));
+
+            Rectangle cropArea = new Rectangle(new Point(0, 40), level.ClientSize);
+
+            screenshot = screenshot.Clone(cropArea, screenshot.PixelFormat);
+
+            Slot3.Image.Dispose();
+
+            screenshot.Save("../../data/slot3.png");
+
+            screenshot.Dispose();
+
+            string[] data = new string[7];
+
+            data[0] = JsonSerializer.Serialize(Game.player);
+            data[1] = JsonSerializer.Serialize(Game.Areas);
+            data[2] = JsonSerializer.Serialize(Game.CurrentArea);
+            data[3] = JsonSerializer.Serialize(Game.Items);
+            data[4] = JsonSerializer.Serialize(Game.Enemies);
+            data[5] = JsonSerializer.Serialize(Game.NPCs);
+            data[6] = JsonSerializer.Serialize(Game.TravelSigns);
+
+            File.WriteAllLines(filepath, data);
+
+            this.Hide();
+            previousForm.Show();
         }
 
         private void Slot4_Click(object sender, EventArgs e)
         {
+            string filepath = "../../data/Save4Data.Json";
 
+            level.DrawToBitmap(screenshot, new Rectangle(new Point(0, 0), screenshot.Size));
+
+            Rectangle cropArea = new Rectangle(new Point(0, 40), level.ClientSize);
+
+            screenshot = screenshot.Clone(cropArea, screenshot.PixelFormat);
+
+            Slot4.Image.Dispose();
+
+            screenshot.Save("../../data/slot4.png");
+
+            screenshot.Dispose();
+
+            string[] data = new string[7];
+
+            data[0] = JsonSerializer.Serialize(Game.player);
+            data[1] = JsonSerializer.Serialize(Game.Areas);
+            data[2] = JsonSerializer.Serialize(Game.CurrentArea);
+            data[3] = JsonSerializer.Serialize(Game.Items);
+            data[4] = JsonSerializer.Serialize(Game.Enemies);
+            data[5] = JsonSerializer.Serialize(Game.NPCs);
+            data[6] = JsonSerializer.Serialize(Game.TravelSigns);
+
+            File.WriteAllLines(filepath, data);
+
+            this.Hide();
+            previousForm.Show();
         }
     }
 }
