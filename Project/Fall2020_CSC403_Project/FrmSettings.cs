@@ -86,7 +86,7 @@ namespace Fall2020_CSC403_Project
         }
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            FrmSave frmsave = new FrmSave(this);
+            FrmLoad frmsave = new FrmLoad(this);
             frmsave.FormClosed += (s, args) => this.Close();
             frmsave.Show();
             this.Hide();

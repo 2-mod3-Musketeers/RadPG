@@ -1,6 +1,6 @@
 ﻿namespace Fall2020_CSC403_Project
 {
-    partial class FrmSave
+    partial class FrmLoad
     {
         /// <summary>
         /// Required designer variable.

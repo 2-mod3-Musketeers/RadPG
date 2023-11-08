@@ -37,37 +37,44 @@ namespace Fall2020_CSC403_Project
 
             // Add Buttons For Start, Settings and Exit
             Button NewGameButton = new Button();
+            Button LoadGameButton = new Button();
             Button SettingsButton = new Button();
             Button LeaderboardButton = new Button();
             Button ExitButton = new Button();
 
             NewGameButton.Location = new Point(0 + (width / 18), 0 + ((4 * height) / 10));
+            LoadGameButton.Location = new Point(0 + (width / 18), 0 + ((5 * height) / 10));
             LeaderboardButton.Location = new Point(0 + (width / 18), 0 + (6 * height / 10));
             SettingsButton.Location = new Point(0 + (width / 18), 0 + ((7 * height) / 10));
             ExitButton.Location = new Point(0 + (width / 18), 0 + (8 * height / 10));
             
 
             NewGameButton.Parent = BackgroundImg;
+            LoadGameButton.Parent = BackgroundImg;
             LeaderboardButton.Parent = BackgroundImg;
             SettingsButton.Parent = BackgroundImg;
             ExitButton.Parent = BackgroundImg;
 
             NewGameButton.Size = new Size(width / 3, height / 11);
+            LoadGameButton.Size = new Size(width / 3, height / 11);
             LeaderboardButton.Size = new Size(width / 3, height / 11);
             SettingsButton.Size = new Size(width / 3, height / 11);
             ExitButton.Size = new Size(width / 3, height / 11);
 
             NewGameButton.Text = ("New Game");
+            LoadGameButton.Text = ("Load Game");
             LeaderboardButton.Text = ("Leaderboard");
             SettingsButton.Text = ("Settings");
             ExitButton.Text = ("Quit Game");
 
             NewGameButton.Font = new Font("NSimSun", NewGameButton.Size.Height / 2);
+            LoadGameButton.Font = new Font("NSimSun", LoadGameButton.Size.Height / 2);
             LeaderboardButton.Font = new Font("NSimSun", LeaderboardButton.Size.Height / 2);
             SettingsButton.Font = new Font("NSimSun", SettingsButton.Size.Height / 2);
             ExitButton.Font = new Font("NSimSun", ExitButton.Size.Height / 2);
 
             NewGameButton.Click += NewGameButton_Click;
+            LoadGameButton.Click += LoadGameButton_Click;
             LeaderboardButton.Click += LeaderboardButton_Click;
             SettingsButton.Click += SettingsButton_Click;
             ExitButton.Click += ExitButton_Click;
@@ -96,19 +103,6 @@ namespace Fall2020_CSC403_Project
             SoundPlayer mainMenuPlayer = new SoundPlayer(Resources.Mainmenu_audio);
             mainMenuPlayer.PlayLooping();
         }
-        
-        private void ExitButton_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void SettingsButton_Click(object sender, EventArgs e)
-        {
-            FrmSettings frmsettings = new FrmSettings(this);
-            frmsettings.FormClosed += (s, args) => this.Close(); 
-            frmsettings.Show();
-            this.Hide(); // Hide the FrmMain form
-        }
 
         private void NewGameButton_Click(object sender, EventArgs e)
         {
@@ -117,13 +111,30 @@ namespace Fall2020_CSC403_Project
             frmplayerselect.Show();
             this.Hide(); // Hide the FrmMain form
         }
-
+        private void LoadGameButton_Click(object sender, EventArgs e)
+        {
+            FrmLoad frmload = new FrmLoad(this);
+            frmload.FormClosed += (s, args) => this.Close(); // Handle closure of FrmLoad to close the application
+            frmload.Show();
+            this.Hide(); // Hide the FrmMain form
+        }
         private void LeaderboardButton_Click(object sender, EventArgs e)
         {
             FrmLeaderboard leaderboard = new FrmLeaderboard();
             leaderboard.FormClosed += (s, args) => this.Close(); // Handle closure of FrmLeaderboard to close the application
             leaderboard.Show();
             this.Hide(); // Hide the FrmMain form
+        }
+        private void SettingsButton_Click(object sender, EventArgs e)
+        {
+            FrmSettings frmsettings = new FrmSettings(this);
+            frmsettings.FormClosed += (s, args) => this.Close(); 
+            frmsettings.Show();
+            this.Hide(); // Hide the FrmMain form
+        }
+        private void ExitButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
     }

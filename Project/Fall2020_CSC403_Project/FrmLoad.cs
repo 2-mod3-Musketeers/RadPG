@@ -14,7 +14,7 @@ using System.IO;
 
 namespace Fall2020_CSC403_Project
 {
-    public partial class FrmSave : Form
+    public partial class FrmLoad : Form
     {
         private Form previousForm;
         private FrmLevel level;
@@ -30,7 +30,7 @@ namespace Fall2020_CSC403_Project
         private PictureBox Slot4;
 
         private Bitmap screenshot;
-        public FrmSave(Form previousForm)
+        public FrmLoad(Form previousForm)
         {
             this.WindowState = FormWindowState.Maximized;
             this.previousForm = previousForm;

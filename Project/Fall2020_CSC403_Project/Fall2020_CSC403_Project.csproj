@@ -66,11 +66,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FrmSave.cs">
+    <Compile Include="FrmLoad.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmSave.Designer.cs">
-      <DependentUpon>FrmSave.cs</DependentUpon>
+    <Compile Include="FrmLoad.Designer.cs">
+      <DependentUpon>FrmLoad.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmBattleScreen.cs">
       <SubType>Form</SubType>
