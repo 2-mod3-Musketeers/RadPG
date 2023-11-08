@@ -117,7 +117,7 @@ namespace Fall2020_CSC403_Project
                 BorderStyle = BorderStyle.None,
             };
 
-            // Add Buttons For Start, Settings and Exit
+            // Add Button for main menu
             Button MainMenuButton = new Button();
             MainMenuButton.Location = new Point(0 + (width / 18), 0 + (7 * height / 9));
             MainMenuButton.Parent = BackgroundImg;

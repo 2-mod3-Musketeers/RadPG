@@ -106,9 +106,9 @@ namespace Fall2020_CSC403_Project
 
         private void NewGameButton_Click(object sender, EventArgs e)
         {
-            FrmPlayerSelect frmplayerselect = new FrmPlayerSelect(this);
-            frmplayerselect.FormClosed += (s, args) => this.Close(); // Handle closure of FrmLevel to close the application
-            frmplayerselect.Show();
+            FrmNewGame frmnewgame = new FrmNewGame(this);
+            frmnewgame.FormClosed += (s, args) => this.Close(); // Handle closure of FrmNewGame to close the application
+            frmnewgame.Show();
             this.Hide(); // Hide the FrmMain form
         }
         private void LoadGameButton_Click(object sender, EventArgs e)

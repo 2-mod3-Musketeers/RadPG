@@ -12,6 +12,8 @@ namespace Fall2020_CSC403_Project.code
 {
 	public static class Game
 	{
+        public static int saveSlot;
+
 		public static Player player = null;
 
 		public static Area[] Areas = new Area[10];
