@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fall2020_CSC403_Project.code;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,11 +14,13 @@ namespace Fall2020_CSC403_Project
     public partial class FrmSettings : Form
     {
         private Form previousForm;
+        private FrmLevel level;
 
 
         public FrmSettings(Form previous)
         {
-            previousForm = previous;
+            this.previousForm = previous;
+            this.level = Application.OpenForms["FrmLevel"] as FrmLevel;
             this.WindowState = FormWindowState.Maximized;
             InitializeComponent();
             this.setup();
@@ -86,10 +89,7 @@ namespace Fall2020_CSC403_Project
         }
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            FrmLoad frmsave = new FrmLoad(this);
-            frmsave.FormClosed += (s, args) => this.Close();
-            frmsave.Show();
-            this.Hide();
+            level.Save();
         }
 
 

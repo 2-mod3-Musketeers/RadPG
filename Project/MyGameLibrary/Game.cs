@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MyGameLibrary;
 using MyGameLibrary.Properties;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace Fall2020_CSC403_Project.code
 {
@@ -26,7 +29,6 @@ namespace Fall2020_CSC403_Project.code
         public static Dictionary<string, Enemy> Enemies = new Dictionary<string, Enemy>();
         public static Dictionary<string, NPC> NPCs = new Dictionary<string, NPC>();
         public static Dictionary<string, Structure> Structures = new Dictionary<string, Structure>();
-        public static Dictionary<string, TravelSign> TravelSigns = new Dictionary<string, TravelSign>();
 
         public static void PopulateWorld()
         {
@@ -273,5 +275,7 @@ namespace Fall2020_CSC403_Project.code
                 BackColor = Color.Transparent,
             };
         }
+
+        
     }
 }

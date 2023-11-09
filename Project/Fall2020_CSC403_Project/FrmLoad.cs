@@ -47,7 +47,9 @@ namespace Fall2020_CSC403_Project
             int height = Screen.PrimaryScreen.Bounds.Height;
             int width = Screen.PrimaryScreen.Bounds.Width;
 
-            screenshot = new Bitmap(width, height);
+            
+
+        screenshot = new Bitmap(width, height);
 
             Save1 = new Label
             {
@@ -124,7 +126,7 @@ namespace Fall2020_CSC403_Project
                 Location = new Point(0, height / 2 + height / 32),
                 Size = new Size(width / 2 - width / 32, height / 2 - 3 * height / 32),
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Image = Image.FromFile("../../data/slot3.png"),
+                Image = this.CreateBitmap("../../data/slot3.png"),
             };
             Slot3.Click += Slot3_Click;
 
@@ -139,6 +141,19 @@ namespace Fall2020_CSC403_Project
             Slot4.Click += Slot4_Click;
 
             
+        }
+
+        private Bitmap CreateBitmap(string filepath)
+        {
+            using (FileStream stream = new FileStream("../../data/slot3.png", FileMode.Open, FileAccess.Read))
+            // get a binary reader for the file stream
+            using (BinaryReader reader = new BinaryReader(stream))
+            {
+                // copy the content of the file into a memory stream
+                var memoryStream = new MemoryStream(reader.ReadBytes((int)stream.Length));
+                // make a new Bitmap object the owner of the MemoryStream
+                return new Bitmap(memoryStream);
+            }
         }
 
         private void Slot1_Click(object sender, EventArgs e)
@@ -157,7 +172,7 @@ namespace Fall2020_CSC403_Project
 
             screenshot.Dispose();
 
-            string[] data = new string[7];
+            string[] data = new string[6];
 
             data[0] = JsonSerializer.Serialize(Game.player);
             data[1] = JsonSerializer.Serialize(Game.Areas);
@@ -165,7 +180,6 @@ namespace Fall2020_CSC403_Project
             data[3] = JsonSerializer.Serialize(Game.Items);
             data[4] = JsonSerializer.Serialize(Game.Enemies);
             data[5] = JsonSerializer.Serialize(Game.NPCs);
-            data[6] = JsonSerializer.Serialize(Game.TravelSigns);
 
             File.WriteAllLines(filepath, data);
 
@@ -197,7 +211,6 @@ namespace Fall2020_CSC403_Project
             data[3] = JsonSerializer.Serialize(Game.Items);
             data[4] = JsonSerializer.Serialize(Game.Enemies);
             data[5] = JsonSerializer.Serialize(Game.NPCs);
-            data[6] = JsonSerializer.Serialize(Game.TravelSigns);
 
             File.WriteAllLines(filepath, data);
 
@@ -229,7 +242,6 @@ namespace Fall2020_CSC403_Project
             data[3] = JsonSerializer.Serialize(Game.Items);
             data[4] = JsonSerializer.Serialize(Game.Enemies);
             data[5] = JsonSerializer.Serialize(Game.NPCs);
-            data[6] = JsonSerializer.Serialize(Game.TravelSigns);
 
             File.WriteAllLines(filepath, data);
 
@@ -261,7 +273,6 @@ namespace Fall2020_CSC403_Project
             data[3] = JsonSerializer.Serialize(Game.Items);
             data[4] = JsonSerializer.Serialize(Game.Enemies);
             data[5] = JsonSerializer.Serialize(Game.NPCs);
-            data[6] = JsonSerializer.Serialize(Game.TravelSigns);
 
             File.WriteAllLines(filepath, data);
 

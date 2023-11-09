@@ -68,8 +68,6 @@ namespace Fall2020_CSC403_Project
             this.MainMenu = MainMenu;
 
             this.AreaNum = 4;
-
-
         }
 
 
@@ -1183,6 +1181,63 @@ namespace Fall2020_CSC403_Project
 
 
             InitializeAreaLayout();
+
+        }
+
+        public void Save()
+        {
+            int width = Screen.PrimaryScreen.Bounds.Width;
+            int height = Screen.PrimaryScreen.Bounds.Height;
+
+            string filepath;
+            Bitmap screenshot = new Bitmap(width, height);
+
+
+            this.DrawToBitmap(screenshot, new Rectangle(new Point(0, 0), screenshot.Size));
+
+            Rectangle cropArea = new Rectangle(new Point(0, 40), this.ClientSize);
+
+            screenshot = screenshot.Clone(cropArea, screenshot.PixelFormat);
+
+            switch (Game.saveSlot)
+            {
+                case 1:
+                    filepath = "../../data/Save1Data.json";
+                    screenshot.Save("../../data/slot1.png");
+                    break;
+                case 2:
+                    filepath = "../../data/Save2Data.json";
+                    screenshot.Save("../../data/slot2.png");
+                    break;
+                case 3:
+                    filepath = "../../data/Save3Data.json";
+                    screenshot.Save("../../data/slot3.png");
+                    break;
+                case 4:
+                    filepath = "../../data/Save4Data.json";
+                    screenshot.Save("../../data/slot4.png");
+                    break;
+                default:
+                    filepath = "../../data/Save1Data.json";
+                    screenshot.Save("../../data/slot1.png");
+                    break;
+            }
+
+
+
+
+            screenshot.Dispose();
+
+            string[] data = new string[6];
+
+            data[0] = JsonSerializer.Serialize(Game.player);
+            data[1] = JsonSerializer.Serialize(Game.Areas);
+            data[2] = JsonSerializer.Serialize(Game.CurrentArea);
+            data[3] = JsonSerializer.Serialize(Game.Items);
+            data[4] = JsonSerializer.Serialize(Game.Enemies);
+            data[5] = JsonSerializer.Serialize(Game.NPCs);
+
+            File.WriteAllLines(filepath, data);
 
         }
     }

@@ -25,10 +25,10 @@ namespace Fall2020_CSC403_Project
         private Label Save3;
         private Label Save4;
 
-        private PictureBox Slot1;
-        private PictureBox Slot2;
-        private PictureBox Slot3;
-        private PictureBox Slot4;
+        public PictureBox Slot1;
+        public PictureBox Slot2;
+        public PictureBox Slot3;
+        public PictureBox Slot4;
 
         private Bitmap screenshot;
         public FrmNewGame(Form previousForm)
@@ -104,7 +104,7 @@ namespace Fall2020_CSC403_Project
                 Location = new Point(0, height / 16),
                 Size = new Size(width / 2 - width / 32, height / 2 - 3 * height / 32),
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Image = Image.FromFile("../../data/slot1.png"),
+                Image = CreateBitmap("../../data/slot1.png"),
                 BorderStyle = BorderStyle.None,
             };
             Slot1.Click += Slot1_Click;
@@ -115,7 +115,7 @@ namespace Fall2020_CSC403_Project
                 Location = new Point(width / 2 + width / 32, height / 16),
                 Size = new Size(width / 2 - width / 32, height / 2 - 3 * height / 32),
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Image = Image.FromFile("../../data/slot2.png"),
+                Image = CreateBitmap("../../data/slot1.png"),
             };
             Slot2.Click += Slot2_Click;
 
@@ -125,7 +125,7 @@ namespace Fall2020_CSC403_Project
                 Location = new Point(0, height / 2 + height / 32),
                 Size = new Size(width / 2 - width / 32, height / 2 - 3 * height / 32),
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Image = Image.FromFile("../../data/slot3.png"),
+                Image = CreateBitmap("../../data/slot1.png"),
             };
             Slot3.Click += Slot3_Click;
 
@@ -135,11 +135,23 @@ namespace Fall2020_CSC403_Project
                 Location = new Point(width / 2 + width / 32, height / 2 + height / 32),
                 Size = new Size(width / 2 - width / 32, height / 2 - 3 * height / 32),
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Image = Image.FromFile("../../data/slot4.png"),
+                Image = CreateBitmap("../../data/slot1.png"),
             };
             Slot4.Click += Slot4_Click;
 
             
+        }
+        private Bitmap CreateBitmap(string filepath)
+        {
+            using (FileStream stream = new FileStream("../../data/slot3.png", FileMode.Open, FileAccess.Read))
+            // get a binary reader for the file stream
+            using (BinaryReader reader = new BinaryReader(stream))
+            {
+                // copy the content of the file into a memory stream
+                var memoryStream = new MemoryStream(reader.ReadBytes((int)stream.Length));
+                // make a new Bitmap object the owner of the MemoryStream
+                return new Bitmap(memoryStream);
+            }
         }
 
         private void Slot1_Click(object sender, EventArgs e)
@@ -147,7 +159,6 @@ namespace Fall2020_CSC403_Project
             if (Slot1.Image != null)
             {
                 FrmWarning frmwarning = new FrmWarning(this, "Slot1");
-                frmwarning.FormClosed += (s, args) => this.Close(); // Handle closure of FrmWarning to close the application
                 frmwarning.Show();
             }
             else
@@ -161,98 +172,50 @@ namespace Fall2020_CSC403_Project
 
         private void Slot2_Click(object sender, EventArgs e)
         {
-            string filepath = "../../data/Save2Data.Json";
-
-            level.DrawToBitmap(screenshot, new Rectangle(new Point(0, 0), screenshot.Size));
-
-            Rectangle cropArea = new Rectangle(new Point(0, 40), level.ClientSize);
-
-            screenshot = screenshot.Clone(cropArea, screenshot.PixelFormat);
-
-            Slot2.Image.Dispose();
-
-            screenshot.Save("../../data/slot2.png");
-
-            screenshot.Dispose();
-
-            string[] data = new string[7];
-
-            data[0] = JsonSerializer.Serialize(Game.player);
-            data[1] = JsonSerializer.Serialize(Game.Areas);
-            data[2] = JsonSerializer.Serialize(Game.CurrentArea);
-            data[3] = JsonSerializer.Serialize(Game.Items);
-            data[4] = JsonSerializer.Serialize(Game.Enemies);
-            data[5] = JsonSerializer.Serialize(Game.NPCs);
-            data[6] = JsonSerializer.Serialize(Game.TravelSigns);
-
-            File.WriteAllLines(filepath, data);
-
-            this.Hide();
-            previousForm.Show();
+            if (Slot2.Image != null)
+            {
+                FrmWarning frmwarning = new FrmWarning(this, "Slot2");
+                frmwarning.Show();
+            }
+            else
+            {
+                FrmPlayerSelect frmplayerselect = new FrmPlayerSelect(this);
+                frmplayerselect.FormClosed += (s, args) => this.Close(); // Handle closure of FrmPlayerSelect to close the application
+                frmplayerselect.Show();
+                this.Hide(); // Hide the FrmMain form
+            }
         }
 
         private void Slot3_Click(object sender, EventArgs e)
         {
-            string filepath = "../../data/Save3Data.Json";
-
-            level.DrawToBitmap(screenshot, new Rectangle(new Point(0, 0), screenshot.Size));
-
-            Rectangle cropArea = new Rectangle(new Point(0, 40), level.ClientSize);
-
-            screenshot = screenshot.Clone(cropArea, screenshot.PixelFormat);
-
-            Slot3.Image.Dispose();
-
-            screenshot.Save("../../data/slot3.png");
-
-            screenshot.Dispose();
-
-            string[] data = new string[7];
-
-            data[0] = JsonSerializer.Serialize(Game.player);
-            data[1] = JsonSerializer.Serialize(Game.Areas);
-            data[2] = JsonSerializer.Serialize(Game.CurrentArea);
-            data[3] = JsonSerializer.Serialize(Game.Items);
-            data[4] = JsonSerializer.Serialize(Game.Enemies);
-            data[5] = JsonSerializer.Serialize(Game.NPCs);
-            data[6] = JsonSerializer.Serialize(Game.TravelSigns);
-
-            File.WriteAllLines(filepath, data);
-
-            this.Hide();
-            previousForm.Show();
+            if (Slot3.Image != null)
+            {
+                FrmWarning frmwarning = new FrmWarning(this, "Slot3");
+                frmwarning.Show();
+            }
+            else
+            {
+                FrmPlayerSelect frmplayerselect = new FrmPlayerSelect(this);
+                frmplayerselect.FormClosed += (s, args) => this.Close(); // Handle closure of FrmPlayerSelect to close the application
+                frmplayerselect.Show();
+                this.Hide(); // Hide the FrmMain form
+            }
         }
 
         private void Slot4_Click(object sender, EventArgs e)
         {
-            string filepath = "../../data/Save4Data.Json";
-
-            level.DrawToBitmap(screenshot, new Rectangle(new Point(0, 0), screenshot.Size));
-
-            Rectangle cropArea = new Rectangle(new Point(0, 40), level.ClientSize);
-
-            screenshot = screenshot.Clone(cropArea, screenshot.PixelFormat);
-
-            Slot4.Image.Dispose();
-
-            screenshot.Save("../../data/slot4.png");
-
-            screenshot.Dispose();
-
-            string[] data = new string[7];
-
-            data[0] = JsonSerializer.Serialize(Game.player);
-            data[1] = JsonSerializer.Serialize(Game.Areas);
-            data[2] = JsonSerializer.Serialize(Game.CurrentArea);
-            data[3] = JsonSerializer.Serialize(Game.Items);
-            data[4] = JsonSerializer.Serialize(Game.Enemies);
-            data[5] = JsonSerializer.Serialize(Game.NPCs);
-            data[6] = JsonSerializer.Serialize(Game.TravelSigns);
-
-            File.WriteAllLines(filepath, data);
-
-            this.Hide();
-            previousForm.Show();
+            if (Slot4.Image != null)
+            {
+                FrmWarning frmwarning = new FrmWarning(this, "Slot4");
+                frmwarning.Show();
+            }
+            else
+            {
+                FrmPlayerSelect frmplayerselect = new FrmPlayerSelect(this);
+                frmplayerselect.FormClosed += (s, args) => this.Close(); // Handle closure of FrmPlayerSelect to close the application
+                frmplayerselect.Show();
+                this.Hide(); // Hide the FrmMain form
+            }
         }
     }
 }
