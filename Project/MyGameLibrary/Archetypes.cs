@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
 using System.Security.Cryptography;
+using System.Security.Policy;
 using System.Windows.Forms;
 using Fall2020_CSC403_Project;
 using MyGameLibrary.Properties;
@@ -19,6 +20,7 @@ namespace Fall2020_CSC403_Project.code
         int baseDamage { get; }
         int baseSpeed { get; }
         int hitMod { get; set; }
+        string opener { get; }
 
         void specialMove(Character target);
 
@@ -45,6 +47,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDamage { get; }
         public int baseSpeed { get; }
         public int hitMod { get; set; }
+        public string opener { get; }
 
         public Tank()
         {
@@ -68,6 +71,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDamage { get; }
         public int baseSpeed { get; }
         public int hitMod { get; set; }
+        public string opener { get; }
 
         public Rogue()
         {
@@ -93,6 +97,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDamage { get; }
         public int baseSpeed { get; }
         public int hitMod { get; set; }
+        public string opener { get; }
 
         public Swordsman()
         {
@@ -118,6 +123,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDamage { get; }
         public int baseSpeed { get; }
         public int hitMod { get; set; }
+        public string opener { get; }
 
         public Healer()
         {
@@ -145,6 +151,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDamage { get; }
         public int baseSpeed { get; }
         public int hitMod { get; set; }
+        public string opener { get; }
 
         public Minion()
         {
@@ -154,6 +161,7 @@ namespace Fall2020_CSC403_Project.code
             baseDamage = 5;
             baseSpeed = 2;
             hitMod = 0;
+            opener = "*Unintelligible hissing*";
         }
 
         public void specialMove(Character target) { }
@@ -169,6 +177,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDamage { get; }
         public int baseSpeed { get; }
         public int hitMod { get; set; }
+        public string opener { get; }
 
         public Coward()
         {
@@ -178,6 +187,7 @@ namespace Fall2020_CSC403_Project.code
             baseDamage = 2;
             baseSpeed = 5;
             hitMod = 0;
+            opener = "You'll regret this... No you won't I'm running away!";
         }
 
         public void specialMove(Character target) { }
@@ -193,6 +203,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDamage { get; }
         public int baseSpeed { get; }
         public int hitMod { get; set; }
+        public string opener { get; }
 
         public Brute()
         {
@@ -202,6 +213,7 @@ namespace Fall2020_CSC403_Project.code
             baseDamage = 3;
             baseSpeed = 1;
             hitMod = 1;
+            opener = "*Unintelligible Lizard Noises*";
         }
 
         public void specialMove(Character target) { }
@@ -216,6 +228,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDamage { get; }
         public int baseSpeed { get; }
         public int hitMod { get; set; }
+        public string opener { get; }
 
         public Zombie()
         {
@@ -225,6 +238,7 @@ namespace Fall2020_CSC403_Project.code
             baseDamage = 1;
             baseSpeed = 2;
             hitMod = 1;
+            opener = "*Growling noises* (Hey, how is your day?)";
         }
 
         public void specialMove(Character target) { }
@@ -239,6 +253,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDamage { get; }
         public int baseSpeed { get; }
         public int hitMod { get; set; }
+        public string opener { get; }
 
         public Bees()
         {
@@ -262,6 +277,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDamage { get; }
         public int baseSpeed { get; }
         public int hitMod { get; set; }
+        public string opener { get; }
 
         public Mage()
         {
@@ -271,6 +287,7 @@ namespace Fall2020_CSC403_Project.code
             baseDamage = 7;
             baseSpeed = 3;
             hitMod = 3;
+            opener = "The Lizard Wizards shall reign supreme!";
         }
 
         public void specialMove(Character target) { }
@@ -285,6 +302,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDamage { get; }
         public int baseSpeed { get; }
         public int hitMod { get; set; }
+        public string opener { get; }
 
         public Whelp()
         {
@@ -294,6 +312,7 @@ namespace Fall2020_CSC403_Project.code
             baseDamage = 3;
             baseSpeed = 3;
             hitMod = 3;
+            opener = "My own life is worthless compared to the majestic glory of the mother dragon.";
         }
 
         public void specialMove(Character target) { }
@@ -308,6 +327,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDamage { get; }
         public int baseSpeed { get; }
         public int hitMod { get; set; }
+        public string opener { get; }
 
         public Boss()
         {
@@ -331,6 +351,7 @@ namespace Fall2020_CSC403_Project.code
         public int baseDamage { get; }
         public int baseSpeed { get; }
         public int hitMod { get; set; }
+        public string opener { get; }
 
         public Dragon()
         {
@@ -340,6 +361,7 @@ namespace Fall2020_CSC403_Project.code
             baseDamage = 20;
             baseSpeed = 2;
             hitMod = 10;
+            opener = "*Unintelligible dragon noises*";
         }
 
         public void specialMove(Character target) { }

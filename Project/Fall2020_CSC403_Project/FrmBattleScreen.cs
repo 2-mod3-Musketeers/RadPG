@@ -237,13 +237,14 @@ namespace Fall2020_CSC403_Project
                     Game.FontSizing(loglabels[i]);
                 }
             }
+
+            if(enemy.archetype.opener != null)
+            {
+                BattleLog[0] = enemy.archetype.opener;
+            }
+
             updateLog();
             backlog.Location = new Point(picEnemy.Left - picPlayer.Right / 2 - backlog.Width / 2, picPlayer.Location.Y + picPlayer.Height - 10*loglabels[0].Size.Height);
-
-
-
-
-
 
             UpdateHealthBars();
 
