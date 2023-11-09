@@ -9,6 +9,7 @@ using System.Media;
 using System.Text.Json;
 using System.IO;
 using System.Drawing.Drawing2D;
+using System.Linq;
 
 namespace Fall2020_CSC403_Project
 {
@@ -1223,19 +1224,32 @@ namespace Fall2020_CSC403_Project
                     break;
             }
 
-
-
-
             screenshot.Dispose();
 
-            string[] data = new string[6];
+            List<Enemy>[] Enemies = new List<Enemy>[Game.Areas.Length];
+            List<Item>[] Items = new List<Item>[Game.Areas.Length];
+            bool[] Visited = new bool[Game.Areas.Length];
+            int CurrentArea = 4;
+
+            // cannot serialize Areas due to structure object containing pointers
+            for (int i = 0; i < Game.Areas.Length; i++)
+            {
+                Enemies[i] = Game.Areas[i].Enemies;
+                Items[i] = Game.Areas[i].Items;
+                Visited[i] = Game.Areas[i].Visited;
+                if (Game.CurrentArea == Game.Areas[i])
+                {
+                    CurrentArea = i;
+                }
+            }
+
+            string[] data = new string[5];
 
             data[0] = JsonSerializer.Serialize(Game.player);
-            data[1] = JsonSerializer.Serialize(Game.Areas);
-            data[2] = JsonSerializer.Serialize(Game.CurrentArea);
-            data[3] = JsonSerializer.Serialize(Game.Items);
-            data[4] = JsonSerializer.Serialize(Game.Enemies);
-            data[5] = JsonSerializer.Serialize(Game.NPCs);
+            data[1] = JsonSerializer.Serialize(Enemies);
+            data[2] = JsonSerializer.Serialize(Items);
+            data[3] = JsonSerializer.Serialize(Visited);
+            data[4] = JsonSerializer.Serialize(CurrentArea);
 
             File.WriteAllLines(filepath, data);
 

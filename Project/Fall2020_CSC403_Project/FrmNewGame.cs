@@ -115,7 +115,7 @@ namespace Fall2020_CSC403_Project
                 Location = new Point(width / 2 + width / 32, height / 16),
                 Size = new Size(width / 2 - width / 32, height / 2 - 3 * height / 32),
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Image = CreateBitmap("../../data/slot1.png"),
+                Image = CreateBitmap("../../data/slot2.png"),
             };
             Slot2.Click += Slot2_Click;
 
@@ -125,7 +125,7 @@ namespace Fall2020_CSC403_Project
                 Location = new Point(0, height / 2 + height / 32),
                 Size = new Size(width / 2 - width / 32, height / 2 - 3 * height / 32),
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Image = CreateBitmap("../../data/slot1.png"),
+                Image = CreateBitmap("../../data/slot3.png"),
             };
             Slot3.Click += Slot3_Click;
 
@@ -135,7 +135,7 @@ namespace Fall2020_CSC403_Project
                 Location = new Point(width / 2 + width / 32, height / 2 + height / 32),
                 Size = new Size(width / 2 - width / 32, height / 2 - 3 * height / 32),
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Image = CreateBitmap("../../data/slot1.png"),
+                Image = CreateBitmap("../../data/slot4.png"),
             };
             Slot4.Click += Slot4_Click;
 
@@ -143,7 +143,7 @@ namespace Fall2020_CSC403_Project
         }
         private Bitmap CreateBitmap(string filepath)
         {
-            using (FileStream stream = new FileStream("../../data/slot3.png", FileMode.Open, FileAccess.Read))
+            using (FileStream stream = new FileStream(filepath, FileMode.Open, FileAccess.Read))
             // get a binary reader for the file stream
             using (BinaryReader reader = new BinaryReader(stream))
             {

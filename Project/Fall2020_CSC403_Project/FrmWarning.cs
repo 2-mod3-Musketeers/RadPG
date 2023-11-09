@@ -88,7 +88,6 @@ namespace Fall2020_CSC403_Project
         private void YesButton_Click(object sender, EventArgs e)
         {
             this.Hide();
-            FrmNewGame newgame = Application.OpenForms["FrmNewGame"] as FrmNewGame;
 
             switch (warningType)
             {
@@ -100,7 +99,6 @@ namespace Fall2020_CSC403_Project
                     if (File.Exists("../../data/Save1Data.json"))
                     {
                         File.Delete("../../data/Save1Data.json");
-                        newgame.Slot1.Image.Dispose();
                         File.Delete("../../data/slot1.png");
                     }
                     previousForm.Hide(); // Hide the FrmNewGame form
@@ -114,7 +112,6 @@ namespace Fall2020_CSC403_Project
                     if (File.Exists("../../data/Save2Data.json"))
                     {
                         File.Delete("../../data/Save2Data.json");
-                        newgame.Slot2.Image.Dispose();
                         File.Delete("../../data/slot2.png");
                     }
                     previousForm.Hide(); // Hide the FrmNewGame form
@@ -127,8 +124,8 @@ namespace Fall2020_CSC403_Project
                     frmplayerselect.Show();
                     if (File.Exists("../../data/Save3Data.json"))
                     {
-                        //File.Delete("../../data/Save3Data.json");
-                        //File.Delete("../../data/slot3.png");
+                        File.Delete("../../data/Save3Data.json");
+                        File.Delete("../../data/slot3.png");
                     }
                     previousForm.Hide(); // Hide the FrmNewGame form
                     this.Hide(); // Hide the FrmWarning form
@@ -141,7 +138,6 @@ namespace Fall2020_CSC403_Project
                     if (File.Exists("../../data/4Data.json"))
                     {
                         File.Delete("../../data/Save4Data.json");
-                        newgame.Slot4.Image.Dispose();
                         File.Delete("../../data/slot4.png");
                     }
                     previousForm.Hide(); // Hide the FrmNewGame form
