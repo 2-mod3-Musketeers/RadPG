@@ -23,6 +23,8 @@ namespace Fall2020_CSC403_Project.code
 		public Inventory Inventory { get; set; }
 
 		public Archetype archetype;
+
+		public string archetypeName;
 		
 		public int defense;
 
@@ -38,14 +40,68 @@ namespace Fall2020_CSC403_Project.code
 
 		public Character(string Name, PictureBox Pic, Archetype archetype) : base(Name, Pic)
 		{
-            this.archetype = archetype;
-			this.MaxHealth = archetype.baseMaxHealth;
-            this.damage = archetype.baseDamage;
-            this.defense = archetype.baseDefense;
-            this.speed = archetype.baseSpeed;
-            this.Health = MaxHealth;
+			if (archetype == null)
+			{
+				switch (this.archetypeName)
+				{
+					case "Tank":
+						this.archetype = new Tank();
+						break;
+					case "Rogue":
+                        this.archetype = new Rogue();
+                        break;
+                    case "Swordsman":
+                        this.archetype = new Swordsman();
+                        break;
+                    case "Healer":
+                        this.archetype = new Healer();
+                        break;
+                    case "Minion":
+                        this.archetype = new Minion();
+                        break;
+                    case "Coward":
+                        this.archetype = new Coward();
+                        break;
+                    case "Brute":
+                        this.archetype = new Brute();
+                        break;
+                    case "Zombie":
+                        this.archetype = new Zombie();
+                        break;
+                    case "Bees":
+                        this.archetype = new Bees();
+                        break;
+                    case "Mage":
+                        this.archetype = new Mage();
+                        break;
+                    case "Whelp":
+                        this.archetype = new Whelp();
+                        break;
+                    case "Boss":
+                        this.archetype = new Boss();
+                        break;
+                    case "Dragon":
+                        this.archetype = new Dragon();
+                        break;
+					default:
+						this.archetype = new Rogue();
+						break;
+                }
+
+			}
+			else
+			{
+                this.archetype = archetype;
+            }			
+			this.MaxHealth = this.archetype.baseMaxHealth;
+            this.damage = this.archetype.baseDamage;
+            this.defense = this.archetype.baseDefense;
+            this.speed = this.archetype.baseSpeed;
+            this.Health = this.MaxHealth;
 			this.Inventory = new Inventory();
 			this.dice = new Random();
+			this.archetypeName = this.archetype.name;
+
 		}
 		
 		public string OnAttack(int defense)

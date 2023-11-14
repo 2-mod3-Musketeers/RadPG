@@ -1243,13 +1243,34 @@ namespace Fall2020_CSC403_Project
                 }
             }
 
+            JsonSerializerOptions settings = new JsonSerializerOptions
+            {
+                IncludeFields = true,
+            };
+
             string[] data = new string[5];
 
-            data[0] = JsonSerializer.Serialize(Game.player);
-            data[1] = JsonSerializer.Serialize(Enemies);
-            data[2] = JsonSerializer.Serialize(Items);
-            data[3] = JsonSerializer.Serialize(Visited);
-            data[4] = JsonSerializer.Serialize(CurrentArea);
+            Game.player.Pic = null;
+            Game.player.archetype = null;
+
+            for (int i = 0; i < Areas.Length; i++)
+            {
+                foreach (Enemy enemy in Enemies[i])
+                {
+                    enemy.Pic = null;
+                    enemy.archetype = null;
+                }
+                foreach (Item item in Items[i])
+                {
+                    item.Pic = null;
+                }
+            }
+
+            data[0] = JsonSerializer.Serialize(Game.player, settings);
+            data[1] = JsonSerializer.Serialize(Enemies, settings);
+            data[2] = JsonSerializer.Serialize(Items, settings);
+            data[3] = JsonSerializer.Serialize(Visited, settings);
+            data[4] = JsonSerializer.Serialize(CurrentArea, settings);
 
             File.WriteAllLines(filepath, data);
 

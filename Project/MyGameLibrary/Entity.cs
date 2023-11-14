@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Resources;
 using System.Text;
@@ -16,13 +17,15 @@ namespace Fall2020_CSC403_Project.code
         public int SPEED { get; set; }
 
 		public PictureBox Pic;
+        public Point Location;
+        public Size Size;
+        public Color BackColor;
+
+        public string ImageFilepath;
 
 		public Position MoveSpeed { get; private set; }
 		public Position LastPosition { get; private set; }
 		public Collider Collider { get; private set; }
-
-
-        public Rectangle Size { get; private set; }
         public Position Position { get; private set; }
 
         public string Name { get; private set; }
@@ -38,11 +41,41 @@ namespace Fall2020_CSC403_Project.code
 
         public Entity(string Name, PictureBox Pic)
         {
+            Console.WriteLine(this.Name);
             this.SPEED = 3;
             this.Name = Name;
             this.Pic = Pic;
+            this.ImageFilepath = string.Format("../../data/Pictures/{0}.png", this.Name);
+
+            if (this.Pic == null)
+            {
+                this.Pic = new PictureBox
+                {
+                    Size = this.Size,
+                    Location = this.Location,
+                    Image = Image.FromFile(this.ImageFilepath),
+                    SizeMode = PictureBoxSizeMode.StretchImage,
+                    BackColor = this.BackColor,
+                };
+            }
+            else
+            {
+                Console.WriteLine(this.ImageFilepath);
+                Bitmap clone = (Bitmap)this.Pic.Image.Clone();
+                clone.Save(ImageFilepath);
+                clone.Dispose();
+            }
+
+
             this.Position = new Position(this.Pic);
             this.Collider = new Collider(this.Pic);
+
+            this.Location = this.Pic.Location;
+            this.Size = this.Pic.Size;
+            
+            
+            this.BackColor = this.Pic.BackColor;
+            Console.WriteLine("HELLO");
         }
         
         public void Move()

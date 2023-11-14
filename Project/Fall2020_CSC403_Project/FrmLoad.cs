@@ -11,6 +11,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Runtime;
+using MyGameLibrary;
 
 namespace Fall2020_CSC403_Project
 {
@@ -172,16 +174,27 @@ namespace Fall2020_CSC403_Project
 
             screenshot.Dispose();
 
-            string[] data = new string[6];
+            string[] data = File.ReadAllLines(filepath);
 
-            data[0] = JsonSerializer.Serialize(Game.player);
-            data[1] = JsonSerializer.Serialize(Game.Areas);
-            data[2] = JsonSerializer.Serialize(Game.CurrentArea);
-            data[3] = JsonSerializer.Serialize(Game.Items);
-            data[4] = JsonSerializer.Serialize(Game.Enemies);
-            data[5] = JsonSerializer.Serialize(Game.NPCs);
+            JsonSerializerOptions settings = new JsonSerializerOptions
+            {
+                IncludeFields = true,
+            };
 
-            File.WriteAllLines(filepath, data);
+            Player player;
+            List<Enemy>[] Enemies = new List<Enemy>[Game.Areas.Length];
+            List<Item>[] Items = new List<Item>[Game.Areas.Length];
+            bool[] Visited = new bool[Game.Areas.Length];
+            int CurrentArea;
+
+            player = JsonSerializer.Deserialize<Player>(data[0], settings);
+            Enemies = JsonSerializer.Deserialize<List<Enemy>[]>(data[1], settings);
+            Items = JsonSerializer.Deserialize<List<Item>[]>(data[2], settings);
+            Visited = JsonSerializer.Deserialize<bool[]>(data[3], settings);
+            CurrentArea = JsonSerializer.Deserialize<int>(data[4], settings);
+
+            Console.WriteLine(player.Name);
+            Console.WriteLine(CurrentArea);
 
             this.Hide();
             previousForm.Show();
