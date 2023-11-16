@@ -60,25 +60,26 @@ namespace Fall2020_CSC403_Project
 
             if (this.previousForm.Name != "FrmMain")
             {
+                Button SaveButton = new Button();
+                SaveButton.Location = new Point((width / 3), (2 * height / 8));
+                SaveButton.Size = new Size(width / 3, height / 10);
+                SaveButton.Text = ("Save");
+                SaveButton.Font = new Font("NSimSun", ReturnButton.Size.Height / 2);
+                SaveButton.Parent = this;
+                SaveButton.Click += SaveButton_Click;
+                SaveButton.TabIndex = 2;
+
                 Button MainMenuButton = new Button();
-                MainMenuButton.Location = new Point((width / 3), (2 * height / 8));
+                MainMenuButton.Location = new Point((width / 3), (3 * height / 8));
                 MainMenuButton.Size = new Size(width / 3, height / 10);
                 MainMenuButton.Text = ("Main Menu");
                 MainMenuButton.Font = new Font("NSimSun", ReturnButton.Size.Height / 2);
                 MainMenuButton.Parent = this;
                 MainMenuButton.Click += MainMenuButton_Click;
-                MainMenuButton.TabIndex = 2;
+                MainMenuButton.TabIndex = 3;
 
-                Button SaveButton = new Button();
-                SaveButton.Location = new Point((width / 3), (3 * height / 8));
-                SaveButton.Size = new Size(width / 3, height / 10);
-                SaveButton.Text = ("Save and Quit");
-                SaveButton.Font = new Font("NSimSun", ReturnButton.Size.Height / 2);
-                SaveButton.Parent = this;
-                SaveButton.Click += SaveButton_Click;
-                SaveButton.TabIndex = 3;
-
-                ExitButton.Dispose();
+                ExitButton.Location = new Point((width / 3), (4 * height / 8));
+                ExitButton.TabIndex = 4;
             }
         }
 
@@ -102,10 +103,7 @@ namespace Fall2020_CSC403_Project
             SaveButton.Text = "   Saving...";
             SaveButton.Refresh();
             level.Save();
-
             SaveButton.Text = "Saved";
-
-            Application.Exit();
         }
 
         private void MainMenuButton_Click(object sender, EventArgs e)

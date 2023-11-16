@@ -84,6 +84,7 @@ namespace Fall2020_CSC403_Project.code
         {
             this.Pic.Location = this.Location;
             this.Pic.Size = this.Size;
+            Console.WriteLine(ImageFilepath);
             this.Pic.Image = Image.FromFile(this.ImageFilepath);
             this.Pic.SizeMode = PictureBoxSizeMode.StretchImage;
             this.Pic.BackColor = this.BackColor;

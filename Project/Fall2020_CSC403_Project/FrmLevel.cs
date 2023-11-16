@@ -1216,6 +1216,8 @@ namespace Fall2020_CSC403_Project
 
             List<Enemy>[] Enemies = new List<Enemy>[Game.Areas.Length];
             List<Item>[] Items = new List<Item>[Game.Areas.Length];
+            List<NPC>[] Npcs = new List<NPC>[Game.Areas.Length];
+
             bool[] Visited = new bool[Game.Areas.Length];
             int CurrentArea = 4;
 
@@ -1224,6 +1226,7 @@ namespace Fall2020_CSC403_Project
             {
                 Enemies[i] = Game.Areas[i].Enemies;
                 Items[i] = Game.Areas[i].Items;
+                Npcs[i] = Game.Areas[i].npcs;
                 Visited[i] = Game.Areas[i].Visited;
 
                 // create clones so that real objects are unaffected by operations
@@ -1231,6 +1234,11 @@ namespace Fall2020_CSC403_Project
                 {
                     Enemies[i][j] = Enemies[i][j].Clone();
                 }
+                // create clones so that real objects are unaffected by operations
+                //for (int j = 0; j < Npcs[i].Count; j++)
+                //{
+                //    Npcs[i][j] = Npcs[i][j].Clone();
+                //}
 
                 if (Game.CurrentArea == Game.Areas[i])
                 {
@@ -1245,13 +1253,7 @@ namespace Fall2020_CSC403_Project
                 ObjectCreationHandling = ObjectCreationHandling.Reuse,
             };
 
-            string[] data = new string[6];
-
             Player playerClone = Game.player.Clone();
-
-
-
-            
 
             playerClone.Pic.Dispose();
             playerClone.Pic = null;
@@ -1259,11 +1261,14 @@ namespace Fall2020_CSC403_Project
 
             for (int i = 0; i < playerClone.party.Length; i++)
             {
-                NPC npcClone = playerClone.party[i].Clone();
-                npcClone.Pic.Dispose();
-                npcClone.Pic = null;
-                npcClone.archetype = null;
-                playerClone.party[i] = npcClone;
+                if (playerClone.party[i] != null)
+                {
+                    NPC npcClone = playerClone.party[i].Clone();
+                    npcClone.Pic.Dispose();
+                    npcClone.Pic = null;
+                    npcClone.archetype = null;
+                    playerClone.party[i] = npcClone;
+                }
             }
 
             for (int i = 0; i < Game.Areas.Length; i++)
@@ -1279,9 +1284,16 @@ namespace Fall2020_CSC403_Project
                     item.Pic.Dispose();
                     item.Pic = null;
                 }
+                foreach (NPC npc in Npcs[i])
+                {
+                    npc.Pic.Dispose();
+                    npc.Pic = null;
+                }
             }
 
             Console.WriteLine("SAVE");
+
+            string[] data = new string[6];
 
             data[0] = JsonConvert.SerializeObject(playerClone, settings);
             Console.WriteLine("SAVE1");
@@ -1291,52 +1303,71 @@ namespace Fall2020_CSC403_Project
             Console.WriteLine("SAVE3");
             data[3] = JsonConvert.SerializeObject(Visited, settings);
             data[4] = JsonConvert.SerializeObject(CurrentArea, settings);
+            data[5] = JsonConvert.SerializeObject(Npcs, settings);
 
             File.WriteAllLines(filepath, data);
+
+
+            RecreateAllEntities(filepath);
+
+            DisposeArea();
+
+            InitializeAreaLayout();
         }
 
-    //    public void RecreateAllEntities(string filepath)
-    //    {
+        public void RecreateAllEntities(string filepath)
+        {
 
-    //        string[] data = File.ReadAllLines(filepath);
+            string[] data = File.ReadAllLines(filepath);
 
-    //        var settings = new JsonSerializerSettings
-    //        {
-    //            TypeNameHandling = TypeNameHandling.All,
-    //            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-    //            ObjectCreationHandling = ObjectCreationHandling.Reuse,
-    //        };
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                ObjectCreationHandling = ObjectCreationHandling.Reuse,
+            };
 
 
-    //        List<Enemy>[] Enemies = new List<Enemy>[Game.Areas.Length];
-    //        List<Item>[] Items = new List<Item>[Game.Areas.Length];
+            List<Enemy>[] Enemies = new List<Enemy>[Game.Areas.Length];
+            List<Item>[] Items = new List<Item>[Game.Areas.Length];
 
-    //        Game.player = JsonConvert.DeserializeObject<Player>(data[0], settings);
-    //        Enemies = JsonConvert.DeserializeObject<List<Enemy>[]>(data[1], settings);
-    //        Items = JsonConvert.DeserializeObject<List<Item>[]>(data[2], settings);
+            Game.player = JsonConvert.DeserializeObject<Player>(data[0], settings);
+            Enemies = JsonConvert.DeserializeObject<List<Enemy>[]>(data[1], settings);
+            Items = JsonConvert.DeserializeObject<List<Item>[]>(data[2], settings);
 
-    //        Game.player.RecreateEntity();
-    //        Game.player.RecreateArchetype();
+            Game.player.RecreateEntity();
+            Game.player.RecreateArchetype();
+            Game.player.Inventory.RecreateInventory();
 
-    //        for (int i = 0; i < Game.Areas.Length; i++)
-    //        {
-    //            Game.Areas[i].Enemies = Enemies[i];
-    //            Game.Areas[i].Items = Items[i];
-    //        }
+            for (int i = 0; i < Game.Areas.Length; i++)
+            {
+                Game.Areas[i].Enemies = Enemies[i];
+                Game.Areas[i].Items = Items[i];
+            }
 
-    //        for (int i = 0; i < Game.Areas.Length; i++)
-    //        {
-    //            for (int j = 0; j < Game.Areas[i].Enemies.Count; j++)
-    //            { 
-    //                Game.Areas[i].Enemies[j].RecreateEntity();
-    //                Game.Areas[i].Enemies[j].RecreateArchetype();
-    //            }
-    //            for (int j = 0; j < Game.Areas[i].Items.Count; j++)
-    //            {
-    //                Game.Areas[i].Items[j].RecreateEntity();
-    //            }
+            for (int i = 0; i < Game.Areas.Length; i++)
+            {
+                for (int j = 0; j < Game.Areas[i].Enemies.Count; j++)
+                {
+                    Game.Areas[i].Enemies[j].RecreateEntity();
+                    Game.Areas[i].Enemies[j].RecreateArchetype();
+                }
+                for (int j = 0; j < Game.Areas[i].Items.Count; j++)
+                {
+                    Game.Areas[i].Items[j].RecreateEntity();
+                }
 
-    //        }
-    //    }
+            }
+
+            for (int i = 0; i < Game.player.party.Length; i++)
+            {
+                if (Game.player.party[i] != null)
+                {
+                    Game.player.party[i].RecreateEntity();
+                    Game.player.party[i].RecreateArchetype();
+                    Game.player.party[i].Inventory.RecreateInventory();
+                }
+            }
+        }
     }
 }

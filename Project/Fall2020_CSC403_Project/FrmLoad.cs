@@ -15,6 +15,7 @@ using System.Runtime;
 using MyGameLibrary;
 using Newtonsoft.Json;
 using System.Security.AccessControl;
+using System.Runtime.ConstrainedExecution;
 
 namespace Fall2020_CSC403_Project
 {
@@ -176,6 +177,7 @@ namespace Fall2020_CSC403_Project
 
             List<Enemy>[] Enemies = new List<Enemy>[Game.Areas.Length];
             List<Item>[] Items = new List<Item>[Game.Areas.Length];
+            List<NPC>[] Npcs = new List<NPC>[Game.Areas.Length];
             bool[] Visited = new bool[Game.Areas.Length];
             int CurrentArea;
 
@@ -184,8 +186,9 @@ namespace Fall2020_CSC403_Project
             Items = JsonConvert.DeserializeObject<List<Item>[]>(data[2], settings);
             Visited = JsonConvert.DeserializeObject<bool[]>(data[3], settings);
             CurrentArea = JsonConvert.DeserializeObject<int>(data[4], settings);
+            Npcs = JsonConvert.DeserializeObject<List<NPC>[]>(data[5], settings);
 
-            
+
 
 
             Game.AreaNum = CurrentArea;
@@ -212,6 +215,15 @@ namespace Fall2020_CSC403_Project
                 {
                     Game.Areas[i].Items[j].RecreateEntity();
                 }
+                for (int j = 0; j < Game.Areas[i].npcs.Count; j++)
+                {
+                    Console.WriteLine("HELLO");
+                    Console.WriteLine(Game.Areas[i].npcs[j].Name);
+                    Game.Areas[i].npcs[j].RecreateEntity();
+                    Console.WriteLine(Game.Areas[i].npcs[j].Name);
+                    Game.Areas[i].npcs[j].RecreateArchetype();
+                    Game.Areas[i].npcs[j].Inventory.RecreateInventory();
+                }
             }
             Game.player.RecreateEntity();
             Game.player.RecreateArchetype();
@@ -219,9 +231,12 @@ namespace Fall2020_CSC403_Project
 
             for (int i = 0; i < Game.player.party.Length; i++)
             {
-                Game.player.party[i].RecreateEntity();
-                Game.player.party[i].RecreateArchetype();
-                Game.player.party[i].Inventory.RecreateInventory();
+                if (Game.player.party[i] != null)
+                {
+                    Game.player.party[i].RecreateEntity();
+                    Game.player.party[i].RecreateArchetype();
+                    Game.player.party[i].Inventory.RecreateInventory();
+                }
             }
 
             FrmLevel frmlevel = new FrmLevel(previousForm);
@@ -363,9 +378,12 @@ namespace Fall2020_CSC403_Project
 
             for (int i = 0; i < Game.player.party.Length; i++)
             {
-                Game.player.party[i].RecreateEntity();
-                Game.player.party[i].RecreateArchetype();
-                Game.player.party[i].Inventory.RecreateInventory();
+                if (Game.player.party[i] == null)
+                {
+                    Game.player.party[i].RecreateEntity();
+                    Game.player.party[i].RecreateArchetype();
+                    Game.player.party[i].Inventory.RecreateInventory();
+                }
             }
 
             FrmLevel frmlevel = new FrmLevel(previousForm);
