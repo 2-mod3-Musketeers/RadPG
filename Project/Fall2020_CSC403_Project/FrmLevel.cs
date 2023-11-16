@@ -10,6 +10,9 @@ using System.Text.Json;
 using System.IO;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using Newtonsoft.Json;
+using System.Security.AccessControl;
+using System.Xml.XPath;
 
 namespace Fall2020_CSC403_Project
 {
@@ -65,29 +68,15 @@ namespace Fall2020_CSC403_Project
 
             this.gameOver = false;
             this.WindowState = FormWindowState.Maximized;
-            InitializeComponent();
             this.MainMenu = MainMenu;
+            this.AreaNum = Game.AreaNum;
 
-            this.AreaNum = 4;
+            InitializeComponent();
         }
 
 
         private void FrmLevel_Load(object sender, EventArgs e)
         {
-
-            
-
-            Game.Areas = new Area[10];
-            Game.Areas[0] = new Area("Malek's Mountain", 12, 0.05);
-            Game.Areas[1] = new Area("Village Ruins", 901, 0.05);
-            Game.Areas[2] = new Area("Buddy Beachfront", 890, 0.05);
-            Game.Areas[3] = new Area("Uphill Hill", 789, 0.05);
-            Game.Areas[4] = new Area("Plainsfield", 678, 0.05);
-            Game.Areas[5] = new Area("Lower Harmony Village", 567, 0.18);
-            Game.Areas[6] = new Area("Windy Plateau", 456, 0.05);
-            Game.Areas[7] = new Area("Harmony Plains", 345, 0.05);
-            Game.Areas[8] = new Area("Harmony Village", 623, 0.14);
-            Game.Areas[9] = new Area("Dragon's Lair", 123, 0.22);
 
             Game.CurrentArea = Game.Areas[this.AreaNum];
 
@@ -119,7 +108,7 @@ namespace Fall2020_CSC403_Project
             NameLabel.Location = new Point(0, NameLabel.Size.Height-height/18);
             NameLabel.TextAlign = ContentAlignment.MiddleCenter;
             NameLabel.Font = new Font("NSimSun", 3*NameLabel.Size.Height / 4, FontStyle.Bold);
-            NameLabel.Text =Game.player.Name.ToString();
+            NameLabel.Text = Game.player.Name.ToString();
             NameLabel.BringToFront();
 
             // Add character Health Bar
@@ -366,7 +355,6 @@ namespace Fall2020_CSC403_Project
                 this.Controls.Add(Game.player.Pic);
                 Game.player.Pic.BringToFront();
             }
-
         }
 
         public void AddItemToScreen(Item item)
@@ -706,14 +694,14 @@ namespace Fall2020_CSC403_Project
             ExitButton.Visible = true;
             ExitButton.BringToFront();
 
-            // find the x-coordinate to put the MainMenuButton in the center
-            int centerMainMenuButton = (this.Width / 2) - (MainMenuButton.Width / 2);
+            //// find the x-coordinate to put the MainMenuButton in the center
+            //int centerMainMenuButton = (this.Width / 2) - (MainMenuButton.Width / 2);
 
-            MainMenuButton.Enabled = true;
-            MainMenuButton.Location = new Point(centerMainMenuButton, 400);
-            MainMenuButton.Size = new Size(100, 30);
-            MainMenuButton.Visible = true;
-            MainMenuButton.BringToFront();
+            //MainMenuButton.Enabled = true;
+            //MainMenuButton.Location = new Point(centerMainMenuButton, 400);
+            //MainMenuButton.Size = new Size(100, 30);
+            //MainMenuButton.Visible = true;
+            //MainMenuButton.BringToFront();
 
             RecordLeaderboardData();
 
@@ -722,61 +710,61 @@ namespace Fall2020_CSC403_Project
 
         private void RecordLeaderboardData()
         {
-            string filepath = "../../data/LeaderboardData.json";
-            string[] text = File.ReadAllLines(filepath);
+            //string filepath = "../../data/LeaderboardData.json";
+            //string[] text = File.ReadAllLines(filepath);
 
-            string playerText = text[0];
-            string classText = text[1];
-            string scoresText = text[2];
-            string weaponText = text[3];
-            string armorText = text[4];
-            string utilityText = text[5];
+            //string playerText = text[0];
+            //string classText = text[1];
+            //string scoresText = text[2];
+            //string weaponText = text[3];
+            //string armorText = text[4];
+            //string utilityText = text[5];
 
-            List<String> topPlayers = JsonSerializer.Deserialize<List<String>>(playerText);
-            List<String> topClasses = JsonSerializer.Deserialize<List<String>>(classText);
-            List<int> topScores = JsonSerializer.Deserialize<List<int>>(scoresText);
-            List<String> topWeapons = JsonSerializer.Deserialize<List<String>>(weaponText);
-            List<String> topArmors = JsonSerializer.Deserialize<List<String>>(armorText);
-            List<String> topUtilities = JsonSerializer.Deserialize<List<String>>(utilityText);
+            //List<String> topPlayers = JsonSerializer.Deserialize<List<String>>(playerText);
+            //List<String> topClasses = JsonSerializer.Deserialize<List<String>>(classText);
+            //List<int> topScores = JsonSerializer.Deserialize<List<int>>(scoresText);
+            //List<String> topWeapons = JsonSerializer.Deserialize<List<String>>(weaponText);
+            //List<String> topArmors = JsonSerializer.Deserialize<List<String>>(armorText);
+            //List<String> topUtilities = JsonSerializer.Deserialize<List<String>>(utilityText);
 
 
-            for (int i = 0; i < topScores.Count; i++)
-            {
-                if (score > topScores[i])
-                {
-                    topPlayers.Insert(i, Game.player.Name);
-                    topPlayers.RemoveAt(topPlayers.Count - 1);
-                    topClasses.Insert(i, Game.player.archetype.name);
-                    topClasses.RemoveAt(topClasses.Count - 1);
-                    topScores.Insert(i, score);
-                    topScores.RemoveAt(topScores.Count - 1);
-                    if (Game.player.Inventory.Weapon != null)
-                    {
-                        topWeapons.Insert(i, Game.player.Inventory.Weapon.Name);
-                        topWeapons.RemoveAt(topWeapons.Count - 1);
-                    }
-                    if (Game.player.Inventory.Armor != null)
-                    {
-                        topArmors.Insert(i, Game.player.Inventory.Armor.Name);
-                        topArmors.RemoveAt(topArmors.Count - 1);
-                    }
-                    if (Game.player.Inventory.Utility != null)
-                    {
-                        topUtilities.Insert(i, Game.player.Inventory.Utility.Name);
-                        topUtilities.RemoveAt(topUtilities.Count - 1);
-                    }
-                    break;
-                }
-            }
-            string[] data = new string[6];
-            data[0] = JsonSerializer.Serialize(topPlayers);
-            data[1] = JsonSerializer.Serialize(topClasses);
-            data[2] = JsonSerializer.Serialize(topScores);
-            data[3] = JsonSerializer.Serialize(topWeapons);
-            data[4] = JsonSerializer.Serialize(topArmors);
-            data[5] = JsonSerializer.Serialize(topUtilities);
+            //for (int i = 0; i < topScores.Count; i++)
+            //{
+            //    if (score > topScores[i])
+            //    {
+            //        topPlayers.Insert(i, Game.player.Name);
+            //        topPlayers.RemoveAt(topPlayers.Count - 1);
+            //        topClasses.Insert(i, Game.player.archetype.name);
+            //        topClasses.RemoveAt(topClasses.Count - 1);
+            //        topScores.Insert(i, score);
+            //        topScores.RemoveAt(topScores.Count - 1);
+            //        if (Game.player.Inventory.Weapon != null)
+            //        {
+            //            topWeapons.Insert(i, Game.player.Inventory.Weapon.Name);
+            //            topWeapons.RemoveAt(topWeapons.Count - 1);
+            //        }
+            //        if (Game.player.Inventory.Armor != null)
+            //        {
+            //            topArmors.Insert(i, Game.player.Inventory.Armor.Name);
+            //            topArmors.RemoveAt(topArmors.Count - 1);
+            //        }
+            //        if (Game.player.Inventory.Utility != null)
+            //        {
+            //            topUtilities.Insert(i, Game.player.Inventory.Utility.Name);
+            //            topUtilities.RemoveAt(topUtilities.Count - 1);
+            //        }
+            //        break;
+            //    }
+            //}
+            //string[] data = new string[6];
+            //data[0] = JsonSerializer.Serialize(topPlayers);
+            //data[1] = JsonSerializer.Serialize(topClasses);
+            //data[2] = JsonSerializer.Serialize(topScores);
+            //data[3] = JsonSerializer.Serialize(topWeapons);
+            //data[4] = JsonSerializer.Serialize(topArmors);
+            //data[5] = JsonSerializer.Serialize(topUtilities);
 
-            File.WriteAllLines(filepath, data);
+            //File.WriteAllLines(filepath, data);
         }
 
 
@@ -1041,7 +1029,7 @@ namespace Fall2020_CSC403_Project
             Game.CurrentArea.AddItem(Game.Items["Sting"]);
             Game.CurrentArea.AddItem(Game.Items["Lesser Health Potion"]);
             Game.CurrentArea.AddItem(Game.Items["Shabby Armor"]);
-            Game.CurrentArea.AddItem(Game.Items["Speed Potion"]);
+            Game.CurrentArea.AddItem(Game.Items["Potion of Speed"]);
 
             Game.CurrentArea.AddEnemy(Game.Enemies["Minion1"]);
             Game.CurrentArea.AddEnemy(Game.Enemies["Minion2"]);
@@ -1237,43 +1225,118 @@ namespace Fall2020_CSC403_Project
                 Enemies[i] = Game.Areas[i].Enemies;
                 Items[i] = Game.Areas[i].Items;
                 Visited[i] = Game.Areas[i].Visited;
+
+                // create clones so that real objects are unaffected by operations
+                for (int j = 0; j < Enemies[i].Count; j++)
+                {
+                    Enemies[i][j] = Enemies[i][j].Clone();
+                }
+
                 if (Game.CurrentArea == Game.Areas[i])
                 {
                     CurrentArea = i;
                 }
             }
 
-            JsonSerializerOptions settings = new JsonSerializerOptions
+            var settings = new JsonSerializerSettings
             {
-                IncludeFields = true,
+                TypeNameHandling = TypeNameHandling.All,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                ObjectCreationHandling = ObjectCreationHandling.Reuse,
             };
 
-            string[] data = new string[5];
+            string[] data = new string[6];
 
-            Game.player.Pic = null;
-            Game.player.archetype = null;
+            Player playerClone = Game.player.Clone();
 
-            for (int i = 0; i < Areas.Length; i++)
+
+
+            
+
+            playerClone.Pic.Dispose();
+            playerClone.Pic = null;
+            playerClone.archetype = null;
+
+            for (int i = 0; i < playerClone.party.Length; i++)
+            {
+                NPC npcClone = playerClone.party[i].Clone();
+                npcClone.Pic.Dispose();
+                npcClone.Pic = null;
+                npcClone.archetype = null;
+                playerClone.party[i] = npcClone;
+            }
+
+            for (int i = 0; i < Game.Areas.Length; i++)
             {
                 foreach (Enemy enemy in Enemies[i])
                 {
+                    enemy.Pic.Dispose();
                     enemy.Pic = null;
                     enemy.archetype = null;
                 }
                 foreach (Item item in Items[i])
                 {
+                    item.Pic.Dispose();
                     item.Pic = null;
                 }
             }
 
-            data[0] = JsonSerializer.Serialize(Game.player, settings);
-            data[1] = JsonSerializer.Serialize(Enemies, settings);
-            data[2] = JsonSerializer.Serialize(Items, settings);
-            data[3] = JsonSerializer.Serialize(Visited, settings);
-            data[4] = JsonSerializer.Serialize(CurrentArea, settings);
+            Console.WriteLine("SAVE");
+
+            data[0] = JsonConvert.SerializeObject(playerClone, settings);
+            Console.WriteLine("SAVE1");
+            data[1] = JsonConvert.SerializeObject(Enemies, settings);
+            Console.WriteLine("SAVE2");
+            data[2] = JsonConvert.SerializeObject(Items, settings);
+            Console.WriteLine("SAVE3");
+            data[3] = JsonConvert.SerializeObject(Visited, settings);
+            data[4] = JsonConvert.SerializeObject(CurrentArea, settings);
 
             File.WriteAllLines(filepath, data);
-
         }
+
+    //    public void RecreateAllEntities(string filepath)
+    //    {
+
+    //        string[] data = File.ReadAllLines(filepath);
+
+    //        var settings = new JsonSerializerSettings
+    //        {
+    //            TypeNameHandling = TypeNameHandling.All,
+    //            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+    //            ObjectCreationHandling = ObjectCreationHandling.Reuse,
+    //        };
+
+
+    //        List<Enemy>[] Enemies = new List<Enemy>[Game.Areas.Length];
+    //        List<Item>[] Items = new List<Item>[Game.Areas.Length];
+
+    //        Game.player = JsonConvert.DeserializeObject<Player>(data[0], settings);
+    //        Enemies = JsonConvert.DeserializeObject<List<Enemy>[]>(data[1], settings);
+    //        Items = JsonConvert.DeserializeObject<List<Item>[]>(data[2], settings);
+
+    //        Game.player.RecreateEntity();
+    //        Game.player.RecreateArchetype();
+
+    //        for (int i = 0; i < Game.Areas.Length; i++)
+    //        {
+    //            Game.Areas[i].Enemies = Enemies[i];
+    //            Game.Areas[i].Items = Items[i];
+    //        }
+
+    //        for (int i = 0; i < Game.Areas.Length; i++)
+    //        {
+    //            for (int j = 0; j < Game.Areas[i].Enemies.Count; j++)
+    //            { 
+    //                Game.Areas[i].Enemies[j].RecreateEntity();
+    //                Game.Areas[i].Enemies[j].RecreateArchetype();
+    //            }
+    //            for (int j = 0; j < Game.Areas[i].Items.Count; j++)
+    //            {
+    //                Game.Areas[i].Items[j].RecreateEntity();
+    //            }
+
+    //        }
+    //    }
     }
 }

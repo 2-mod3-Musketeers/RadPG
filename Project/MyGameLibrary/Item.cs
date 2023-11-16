@@ -19,21 +19,21 @@ namespace MyGameLibrary
         public PotionTypes Potion { get; private set; }
 
 
-        public Item(string Name, PictureBox Pic, int Stat, ItemType Type, string desc) : base(Name, Pic)
-        {
-            this.Stat = Stat;
-            this.Type = Type;
-            this.Desc = desc;
-            Pic.Size = new Size(50, 50);
-        }
+        //public Item(string Name, PictureBox Pic, int Stat, ItemType Type, string desc) : base(Name, Pic)
+        //{
+        //    this.Stat = Stat;
+        //    this.Type = Type;
+        //    this.Desc = desc;
+        //    Pic.Size = new Size(50, 50);
+        //}
 
-        public Item(string Name, PictureBox Pic, int Stat, ItemType Type, PotionTypes Potion, string desc) : base(Name, Pic)
+        public Item(string Name, PictureBox Pic, int Stat, ItemType Type, string desc, PotionTypes Potion = PotionTypes.None) : base(Name, Pic)
         {
             this.Stat = Stat;
             this.Type = Type;
             this.Potion = Potion;
-            this.Desc= desc;
-            Pic.Size = new Size(50, 50);
+            this.Desc = desc;
+            this.Pic.Size = new Size(50, 50);
         }
 
 
@@ -46,10 +46,17 @@ namespace MyGameLibrary
 
         public enum PotionTypes
         {
+            None,
             Healing,
             Speed,
             Strength,
             Accuracy
+        }
+
+        public Item Clone()
+        {
+            Item Clone = new Item(this.Name, this.Pic, this.Stat, this.Type, this.Desc);
+            return Clone;
         }
 
     }

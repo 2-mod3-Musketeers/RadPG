@@ -22,6 +22,7 @@ namespace Fall2020_CSC403_Project.code
 		public static Area[] Areas = new Area[10];
 
 		public static Area CurrentArea;
+        public static int AreaNum = 4;
 
         private static Size itemSize = new Size(50, 50);
 
@@ -32,6 +33,17 @@ namespace Fall2020_CSC403_Project.code
 
         public static void PopulateWorld()
         {
+            Areas[0] = new Area("Malek's Mountain", 12, 0.05);
+            Areas[1] = new Area("Village Ruins", 901, 0.05);
+            Areas[2] = new Area("Buddy Beachfront", 890, 0.05);
+            Areas[3] = new Area("Uphill Hill", 789, 0.05);
+            Areas[4] = new Area("Plainsfield", 678, 0.05);
+            Areas[5] = new Area("Lower Harmony Village", 567, 0.18);
+            Areas[6] = new Area("Windy Plateau", 456, 0.05);
+            Areas[7] = new Area("Harmony Plains", 345, 0.05);
+            Areas[8] = new Area("Harmony Village", 623, 0.14);
+            Areas[9] = new Area("Dragon's Lair", 123, 0.22);
+
             // Create Items
             Items["Sting"] = new Item(
                 "Sting",
@@ -46,38 +58,38 @@ namespace Fall2020_CSC403_Project.code
                 5, Item.ItemType.Armor,
                 "This armor looks thin and flexible. Putting it on, there seems to be a gap in the armor along the spine. Since when did people have ridges on their back?");
 
-            Items["Speed Potion"] = new Item(
+            Items["Potion of Speed"] = new Item(
                 "Potion of Speed",
                 MakePictureBox(Resources.speed_potion, new Point(69, 420), itemSize),
                 10,
                 Item.ItemType.Utility,
-                Item.PotionTypes.Speed,
-                "This bottle acts unnatural as a simple tremor will cause the liquid inside to splash about the bottle. What was Marissa thinking when she made this one?");
+                "This bottle acts unnatural as a simple tremor will cause the liquid inside to splash about the bottle. What was Marissa thinking when she made this one?",
+                Item.PotionTypes.Speed);
 
             Items["Lesser Health Potion"] = new Item(
-                "Small Health Potion",
+                "Lesser Health Potion",
                 MakePictureBox(Resources.lesser_health_potion, new Point(20, 400), itemSize),
                 5,
                 Item.ItemType.Utility,
-                Item.PotionTypes.Healing,
-                "This small bottle holds a liquid that swirls with crimson liquid. A brand on the cork bears the logo of Marissa's Cauldron®");
+                "This small bottle holds a liquid that swirls with crimson liquid. A brand on the cork bears the logo of Marissa's Cauldron®",
+                Item.PotionTypes.Healing);
 
-            Items["Strength Potion"] = new Item(
+            Items["Potion of Strength"] = new Item(
                 "Potion of Strength",
                 MakePictureBox(Resources.strength_potion, new Point(400, 400), itemSize),
                 5,
                 Item.ItemType.Utility,
-                Item.PotionTypes.Strength,
-                "The orange liquid inside has a consistency thicker than honey. It looks safe, but you don't trust drinking anything made by Marissa's Rival.");
+                "The orange liquid inside has a consistency thicker than honey. It looks safe, but you don't trust drinking anything made by Marissa's Rival.",
+                Item.PotionTypes.Strength);
 
-            Items["Carpenter Hammer"] = new Item(
-                "Carptener's Hammer",
+            Items["Carpenter's Hammer"] = new Item(
+                "Carpenter's Hammer",
                 MakePictureBox(Resources.common_hammer, new Point(500, 650), itemSize),
                 5,
                 Item.ItemType.Weapon,
                 "This hammer has a sturdy handle and a large head. Must have been used to build houses in a nearby village.");
 
-            Items["Lumberjack Axe"] = new Item(
+            Items["Lumberjack's Axe"] = new Item(
                 "Lumberjack's Axe",
                 MakePictureBox(Resources.common_axe, new Point(880, 880), itemSize),
                 5,
@@ -105,13 +117,13 @@ namespace Fall2020_CSC403_Project.code
                 Item.ItemType.Weapon,
                 "This dagger has been involved in many misdeeds. You grow slightly weary of what the previous owner used this for. The dagger has no name engraved on it... Odd.");
 
-            Items["Accuracy Potion"] = new Item(
+            Items["Potion of Accuracy"] = new Item(
                 "Potion of Accuracy",
                 MakePictureBox(Resources.acc_potion, new Point(800, 100), itemSize),
                 3,
                 Item.ItemType.Utility,
-                Item.PotionTypes.Accuracy,
-                "This liquid seems rigid in this bottle. The cork on top indicates to you that the Allegiance uses this potion as standard issue.");
+                "This liquid seems rigid in this bottle. The cork on top indicates to you that the Allegiance uses this potion as standard issue.",
+                Item.PotionTypes.Accuracy);
 
             // Create Enemies
             Enemies["Minion1"] = new Enemy(

@@ -13,6 +13,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime;
 using MyGameLibrary;
+using Newtonsoft.Json;
+using System.Security.AccessControl;
 
 namespace Fall2020_CSC403_Project
 {
@@ -107,7 +109,7 @@ namespace Fall2020_CSC403_Project
                 Location = new Point(0, height / 16),
                 Size = new Size(width / 2 - width / 32, height / 2 - 3 * height / 32),
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Image = Image.FromFile("../../data/slot1.png"),
+                Image = this.CreateBitmap("../../data/slot1.png"),
                 BorderStyle = BorderStyle.None,
             };
             Slot1.Click += Slot1_Click;
@@ -118,7 +120,7 @@ namespace Fall2020_CSC403_Project
                 Location = new Point(width / 2 + width / 32, height / 16),
                 Size = new Size(width / 2 - width / 32, height / 2 - 3 * height / 32),
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Image = Image.FromFile("../../data/slot2.png"),
+                Image = this.CreateBitmap("../../data/slot2.png"),
             };
             Slot2.Click += Slot2_Click;
 
@@ -138,7 +140,7 @@ namespace Fall2020_CSC403_Project
                 Location = new Point(width / 2 + width / 32, height / 2 + height / 32),
                 Size = new Size(width / 2 - width / 32, height / 2 - 3 * height / 32),
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Image = Image.FromFile("../../data/slot4.png"),
+                Image = this.CreateBitmap("../../data/slot4.png"),
             };
             Slot4.Click += Slot4_Click;
 
@@ -147,7 +149,7 @@ namespace Fall2020_CSC403_Project
 
         private Bitmap CreateBitmap(string filepath)
         {
-            using (FileStream stream = new FileStream("../../data/slot3.png", FileMode.Open, FileAccess.Read))
+            using (FileStream stream = new FileStream(filepath, FileMode.Open, FileAccess.Read))
             // get a binary reader for the file stream
             using (BinaryReader reader = new BinaryReader(stream))
             {
@@ -162,135 +164,287 @@ namespace Fall2020_CSC403_Project
         {
             string filepath = "../../data/Save1Data.Json";
 
-            level.DrawToBitmap(screenshot, new Rectangle(new Point(0, 0), screenshot.Size));
-
-            Rectangle cropArea = new Rectangle(new Point(0, 40), level.ClientSize);
-
-            screenshot = screenshot.Clone(cropArea, screenshot.PixelFormat);
-
-            Slot1.Image.Dispose();
-
-            screenshot.Save("../../data/slot1.png");
-
-            screenshot.Dispose();
-
             string[] data = File.ReadAllLines(filepath);
 
-            JsonSerializerOptions settings = new JsonSerializerOptions
+            var settings = new JsonSerializerSettings
             {
-                IncludeFields = true,
+                TypeNameHandling = TypeNameHandling.All,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                ObjectCreationHandling = ObjectCreationHandling.Reuse,
             };
 
-            Player player;
+
             List<Enemy>[] Enemies = new List<Enemy>[Game.Areas.Length];
             List<Item>[] Items = new List<Item>[Game.Areas.Length];
             bool[] Visited = new bool[Game.Areas.Length];
             int CurrentArea;
 
-            player = JsonSerializer.Deserialize<Player>(data[0], settings);
-            Enemies = JsonSerializer.Deserialize<List<Enemy>[]>(data[1], settings);
-            Items = JsonSerializer.Deserialize<List<Item>[]>(data[2], settings);
-            Visited = JsonSerializer.Deserialize<bool[]>(data[3], settings);
-            CurrentArea = JsonSerializer.Deserialize<int>(data[4], settings);
+            Game.player = JsonConvert.DeserializeObject<Player>(data[0], settings);
+            Enemies = JsonConvert.DeserializeObject<List<Enemy>[]>(data[1], settings);
+            Items = JsonConvert.DeserializeObject<List<Item>[]>(data[2], settings);
+            Visited = JsonConvert.DeserializeObject<bool[]>(data[3], settings);
+            CurrentArea = JsonConvert.DeserializeObject<int>(data[4], settings);
 
-            Console.WriteLine(player.Name);
-            Console.WriteLine(CurrentArea);
+            
 
+
+            Game.AreaNum = CurrentArea;
+            Game.CurrentArea = Game.Areas[CurrentArea];
+
+            for (int i = 0; i < Game.Areas.Length; i++)
+            {           
+                Game.Areas[i].Enemies = Enemies[i];            
+                Game.Areas[i].Items = Items[i];               
+                Game.Areas[i].Visited = Visited[i];
+            }
+
+
+            
+
+            for (int i = 0; i < Game.Areas.Length; i++)
+            {
+                for (int j = 0; j < Game.Areas[i].Enemies.Count; j++)
+                {
+                    Game.Areas[i].Enemies[j].RecreateEntity();
+                    Game.Areas[i].Enemies[j].RecreateArchetype();
+                }
+                for (int j = 0; j < Game.Areas[i].Items.Count; j++)
+                {
+                    Game.Areas[i].Items[j].RecreateEntity();
+                }
+            }
+            Game.player.RecreateEntity();
+            Game.player.RecreateArchetype();
+            Game.player.Inventory.RecreateInventory();
+
+            for (int i = 0; i < Game.player.party.Length; i++)
+            {
+                Game.player.party[i].RecreateEntity();
+                Game.player.party[i].RecreateArchetype();
+                Game.player.party[i].Inventory.RecreateInventory();
+            }
+
+            FrmLevel frmlevel = new FrmLevel(previousForm);
+
+            frmlevel.FormClosed += (s, args) => this.Close();
+            frmlevel.Show();
             this.Hide();
-            previousForm.Show();
         }
 
         private void Slot2_Click(object sender, EventArgs e)
         {
             string filepath = "../../data/Save2Data.Json";
 
-            level.DrawToBitmap(screenshot, new Rectangle(new Point(0, 0), screenshot.Size));
+            string[] data = File.ReadAllLines(filepath);
 
-            Rectangle cropArea = new Rectangle(new Point(0, 40), level.ClientSize);
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                ObjectCreationHandling = ObjectCreationHandling.Reuse,
+            };
 
-            screenshot = screenshot.Clone(cropArea, screenshot.PixelFormat);
 
-            Slot2.Image.Dispose();
+            List<Enemy>[] Enemies = new List<Enemy>[Game.Areas.Length];
+            List<Item>[] Items = new List<Item>[Game.Areas.Length];
+            bool[] Visited = new bool[Game.Areas.Length];
+            int CurrentArea;
 
-            screenshot.Save("../../data/slot2.png");
+            Game.player = JsonConvert.DeserializeObject<Player>(data[0], settings);
+            Enemies = JsonConvert.DeserializeObject<List<Enemy>[]>(data[1], settings);
+            Items = JsonConvert.DeserializeObject<List<Item>[]>(data[2], settings);
+            Visited = JsonConvert.DeserializeObject<bool[]>(data[3], settings);
+            CurrentArea = JsonConvert.DeserializeObject<int>(data[4], settings);
 
-            screenshot.Dispose();
 
-            string[] data = new string[7];
 
-            data[0] = JsonSerializer.Serialize(Game.player);
-            data[1] = JsonSerializer.Serialize(Game.Areas);
-            data[2] = JsonSerializer.Serialize(Game.CurrentArea);
-            data[3] = JsonSerializer.Serialize(Game.Items);
-            data[4] = JsonSerializer.Serialize(Game.Enemies);
-            data[5] = JsonSerializer.Serialize(Game.NPCs);
 
-            File.WriteAllLines(filepath, data);
+            Game.AreaNum = CurrentArea;
+            Game.CurrentArea = Game.Areas[CurrentArea];
 
+            for (int i = 0; i < Game.Areas.Length; i++)
+            {
+                Game.Areas[i].Enemies = Enemies[i];
+                Game.Areas[i].Items = Items[i];
+                Game.Areas[i].Visited = Visited[i];
+            }
+
+
+
+
+            for (int i = 0; i < Game.Areas.Length; i++)
+            {
+                for (int j = 0; j < Game.Areas[i].Enemies.Count; j++)
+                {
+                    Game.Areas[i].Enemies[j].RecreateEntity();
+                    Game.Areas[i].Enemies[j].RecreateArchetype();
+                }
+                for (int j = 0; j < Game.Areas[i].Items.Count; j++)
+                {
+                    Game.Areas[i].Items[j].RecreateEntity();
+                }
+            }
+            Game.player.RecreateEntity();
+            Game.player.RecreateArchetype();
+            Game.player.Inventory.RecreateInventory();
+            Game.player.Pic.BringToFront();
+
+            for (int i = 0; i < Game.player.party.Length; i++)
+            {
+                Game.player.party[i].RecreateEntity();
+                Game.player.party[i].RecreateArchetype();
+                Game.player.party[i].Inventory.RecreateInventory();
+            }
+
+            FrmLevel frmlevel = new FrmLevel(previousForm);
+
+            frmlevel.FormClosed += (s, args) => this.Close();
+            frmlevel.Show();
             this.Hide();
-            previousForm.Show();
         }
 
         private void Slot3_Click(object sender, EventArgs e)
         {
             string filepath = "../../data/Save3Data.Json";
 
-            level.DrawToBitmap(screenshot, new Rectangle(new Point(0, 0), screenshot.Size));
+            string[] data = File.ReadAllLines(filepath);
 
-            Rectangle cropArea = new Rectangle(new Point(0, 40), level.ClientSize);
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                ObjectCreationHandling = ObjectCreationHandling.Reuse,
+            };
 
-            screenshot = screenshot.Clone(cropArea, screenshot.PixelFormat);
 
-            Slot3.Image.Dispose();
+            List<Enemy>[] Enemies = new List<Enemy>[Game.Areas.Length];
+            List<Item>[] Items = new List<Item>[Game.Areas.Length];
+            bool[] Visited = new bool[Game.Areas.Length];
+            int CurrentArea;
 
-            screenshot.Save("../../data/slot3.png");
+            Game.player = JsonConvert.DeserializeObject<Player>(data[0], settings);
+            Enemies = JsonConvert.DeserializeObject<List<Enemy>[]>(data[1], settings);
+            Items = JsonConvert.DeserializeObject<List<Item>[]>(data[2], settings);
+            Visited = JsonConvert.DeserializeObject<bool[]>(data[3], settings);
+            CurrentArea = JsonConvert.DeserializeObject<int>(data[4], settings);
 
-            screenshot.Dispose();
 
-            string[] data = new string[7];
 
-            data[0] = JsonSerializer.Serialize(Game.player);
-            data[1] = JsonSerializer.Serialize(Game.Areas);
-            data[2] = JsonSerializer.Serialize(Game.CurrentArea);
-            data[3] = JsonSerializer.Serialize(Game.Items);
-            data[4] = JsonSerializer.Serialize(Game.Enemies);
-            data[5] = JsonSerializer.Serialize(Game.NPCs);
 
-            File.WriteAllLines(filepath, data);
+            Game.AreaNum = CurrentArea;
+            Game.CurrentArea = Game.Areas[CurrentArea];
 
+            for (int i = 0; i < Game.Areas.Length; i++)
+            {
+                Game.Areas[i].Enemies = Enemies[i];
+                Game.Areas[i].Items = Items[i];
+                Game.Areas[i].Visited = Visited[i];
+            }
+
+
+
+
+            for (int i = 0; i < Game.Areas.Length; i++)
+            {
+                for (int j = 0; j < Game.Areas[i].Enemies.Count; j++)
+                {
+                    Game.Areas[i].Enemies[j].RecreateEntity();
+                    Game.Areas[i].Enemies[j].RecreateArchetype();
+                }
+                for (int j = 0; j < Game.Areas[i].Items.Count; j++)
+                {
+                    Game.Areas[i].Items[j].RecreateEntity();
+                }
+            }
+            Game.player.RecreateEntity();
+            Game.player.RecreateArchetype();
+            Game.player.Inventory.RecreateInventory();
+            Game.player.Pic.BringToFront();
+
+            for (int i = 0; i < Game.player.party.Length; i++)
+            {
+                Game.player.party[i].RecreateEntity();
+                Game.player.party[i].RecreateArchetype();
+                Game.player.party[i].Inventory.RecreateInventory();
+            }
+
+            FrmLevel frmlevel = new FrmLevel(previousForm);
+
+            frmlevel.FormClosed += (s, args) => this.Close();
+            frmlevel.Show();
             this.Hide();
-            previousForm.Show();
         }
 
         private void Slot4_Click(object sender, EventArgs e)
         {
             string filepath = "../../data/Save4Data.Json";
 
-            level.DrawToBitmap(screenshot, new Rectangle(new Point(0, 0), screenshot.Size));
+            string[] data = File.ReadAllLines(filepath);
 
-            Rectangle cropArea = new Rectangle(new Point(0, 40), level.ClientSize);
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                ObjectCreationHandling = ObjectCreationHandling.Reuse,
+            };
 
-            screenshot = screenshot.Clone(cropArea, screenshot.PixelFormat);
 
-            Slot4.Image.Dispose();
+            List<Enemy>[] Enemies = new List<Enemy>[Game.Areas.Length];
+            List<Item>[] Items = new List<Item>[Game.Areas.Length];
+            bool[] Visited = new bool[Game.Areas.Length];
+            int CurrentArea;
 
-            screenshot.Save("../../data/slot4.png");
+            Game.player = JsonConvert.DeserializeObject<Player>(data[0], settings);
+            Enemies = JsonConvert.DeserializeObject<List<Enemy>[]>(data[1], settings);
+            Items = JsonConvert.DeserializeObject<List<Item>[]>(data[2], settings);
+            Visited = JsonConvert.DeserializeObject<bool[]>(data[3], settings);
+            CurrentArea = JsonConvert.DeserializeObject<int>(data[4], settings);
 
-            screenshot.Dispose();
 
-            string[] data = new string[7];
 
-            data[0] = JsonSerializer.Serialize(Game.player);
-            data[1] = JsonSerializer.Serialize(Game.Areas);
-            data[2] = JsonSerializer.Serialize(Game.CurrentArea);
-            data[3] = JsonSerializer.Serialize(Game.Items);
-            data[4] = JsonSerializer.Serialize(Game.Enemies);
-            data[5] = JsonSerializer.Serialize(Game.NPCs);
 
-            File.WriteAllLines(filepath, data);
+            Game.AreaNum = CurrentArea;
+            Game.CurrentArea = Game.Areas[CurrentArea];
 
+            for (int i = 0; i < Game.Areas.Length; i++)
+            {
+                Game.Areas[i].Enemies = Enemies[i];
+                Game.Areas[i].Items = Items[i];
+                Game.Areas[i].Visited = Visited[i];
+            }
+
+
+
+
+            for (int i = 0; i < Game.Areas.Length; i++)
+            {
+                for (int j = 0; j < Game.Areas[i].Enemies.Count; j++)
+                {
+                    Game.Areas[i].Enemies[j].RecreateEntity();
+                    Game.Areas[i].Enemies[j].RecreateArchetype();
+                }
+                for (int j = 0; j < Game.Areas[i].Items.Count; j++)
+                {
+                    Game.Areas[i].Items[j].RecreateEntity();
+                }
+            }
+            Game.player.RecreateEntity();
+            Game.player.RecreateArchetype();
+            Game.player.Inventory.RecreateInventory();
+            Game.player.Pic.BringToFront();
+
+            for (int i = 0; i < Game.player.party.Length; i++)
+            {
+                Game.player.party[i].RecreateEntity();
+                Game.player.party[i].RecreateArchetype();
+                Game.player.party[i].Inventory.RecreateInventory();
+            }
+
+            FrmLevel frmlevel = new FrmLevel(previousForm);
+
+            frmlevel.FormClosed += (s, args) => this.Close();
+            frmlevel.Show();
             this.Hide();
-            previousForm.Show();
         }
     }
 }

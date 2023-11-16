@@ -13,12 +13,16 @@ namespace MyGameLibrary
 {
     public class Inventory
     {
-        public Item Weapon { get; private set; }
-        public Item Armor { get; private set; }
-        public Item Utility { get; private set; }
-        public Item[] Backpack { get; private set; }
+        public Item Weapon;
+        public Item Armor;
+        public Item Utility;
+        public Item[] Backpack;
+        public string weaponName;
+        public string armorName;
+        public string utilityName;
+        public string[] backpackNames = new string[9];
 
-        
+
         public Inventory()
         {
             this.Backpack = new Item[9];
@@ -266,6 +270,90 @@ namespace MyGameLibrary
             {
                 Console.Error.WriteLine("You do not have that item!");
             }
+        }
+
+        public void SaveNames()
+        {
+            if (this.Weapon != null)
+            {
+                this.weaponName = this.Weapon.Name;
+            }
+            if (this.Armor != null)
+            {
+                this.armorName = this.Armor.Name;
+            }
+            if (this.Utility != null)
+            {
+                this.utilityName = this.Utility.Name;
+            }
+
+            this.Weapon = null;
+            this.Armor = null;
+            this.Utility = null;
+
+            for (int i = 0; i < this.Backpack.Length; i++)
+            {
+                if (this.Backpack[i] != null)
+                {
+                    this.backpackNames[i] = this.Backpack[i].Name;
+                    this.Backpack[i] = null;
+                }
+            }
+        }
+
+        public void RecreateInventory()
+        {
+            if (this.weaponName != null)
+            {
+                this.Weapon = Game.Items[weaponName];
+            }
+            if (this.armorName != null)
+            {
+                this.Armor = Game.Items[armorName];
+            }
+            if (this.utilityName != null)
+            {
+                this.Utility = Game.Items[utilityName];
+            }
+            for (int i = 0; i < this.backpackNames.Length; i++)
+            {
+                if (this.backpackNames[i] != null)
+                {
+                    Console.WriteLine(this.backpackNames[i]);
+                    this.Backpack[i] = Game.Items[this.backpackNames[i]];
+                }
+            }
+        }
+
+        public Inventory Clone()
+        {
+            Inventory Clone = new Inventory(this.Weapon, this.Armor, this.Utility, this.Backpack);
+
+            if (this.Weapon != null)
+            {
+                Clone.Weapon = this.Weapon.Clone();
+                Console.WriteLine(Clone.Weapon.Name);
+            }
+            if (this.Armor != null)
+            {
+                Clone.Armor = this.Armor.Clone();
+            }
+            if (this.Utility != null)
+            {
+                Clone.Utility = this.Utility.Clone();
+            }
+
+
+            for (int i = 0; i < this.Backpack.Length; i++)
+            {
+                if (this.Backpack[i] != null)
+                {
+                    Console.WriteLine(this.Backpack[0].Name);
+                    Clone.Backpack[i] = this.Backpack[i].Clone();
+                }
+            }
+
+            return Clone;
         }
 
     }

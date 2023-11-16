@@ -16,6 +16,7 @@ namespace Fall2020_CSC403_Project.code
     {
         public int SPEED { get; set; }
 
+        
 		public PictureBox Pic;
         public Point Location;
         public Size Size;
@@ -41,7 +42,6 @@ namespace Fall2020_CSC403_Project.code
 
         public Entity(string Name, PictureBox Pic)
         {
-            Console.WriteLine(this.Name);
             this.SPEED = 3;
             this.Name = Name;
             this.Pic = Pic;
@@ -49,10 +49,11 @@ namespace Fall2020_CSC403_Project.code
 
             if (this.Pic == null)
             {
+                Console.WriteLine(this.Location.X);
                 this.Pic = new PictureBox
                 {
                     Size = this.Size,
-                    Location = this.Location,
+                    Location = new Point(this.Location.X, this.Location.Y),
                     Image = Image.FromFile(this.ImageFilepath),
                     SizeMode = PictureBoxSizeMode.StretchImage,
                     BackColor = this.BackColor,
@@ -60,10 +61,9 @@ namespace Fall2020_CSC403_Project.code
             }
             else
             {
-                Console.WriteLine(this.ImageFilepath);
-                Bitmap clone = (Bitmap)this.Pic.Image.Clone();
-                clone.Save(ImageFilepath);
-                clone.Dispose();
+                //Bitmap clone = (Bitmap)this.Pic.Image.Clone();
+                //clone.Save(ImageFilepath);
+                //clone.Dispose();
             }
 
 
@@ -75,7 +75,27 @@ namespace Fall2020_CSC403_Project.code
             
             
             this.BackColor = this.Pic.BackColor;
-            Console.WriteLine("HELLO");
+
+            Console.WriteLine("picture");
+            Console.WriteLine(this.Pic.Location.Y);
+        }
+
+        public void RecreateEntity()
+        {
+            this.Pic.Location = this.Location;
+            this.Pic.Size = this.Size;
+            this.Pic.Image = Image.FromFile(this.ImageFilepath);
+            this.Pic.SizeMode = PictureBoxSizeMode.StretchImage;
+            this.Pic.BackColor = this.BackColor;
+
+            this.Position = new Position(this.Pic);
+            this.Collider = new Collider(this.Pic);
+
+            this.Location = this.Pic.Location;
+            this.Size = this.Pic.Size;
+
+
+            this.BackColor = this.Pic.BackColor;
         }
         
         public void Move()
@@ -133,7 +153,5 @@ namespace Fall2020_CSC403_Project.code
             Collider.Enable();
             this.Pic.BringToFront();
         }
-
-
     }
 }

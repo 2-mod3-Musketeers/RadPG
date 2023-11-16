@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyGameLibrary;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -40,6 +41,21 @@ namespace Fall2020_CSC403_Project.code {
                     continue;
                 }
             }
+        }
+
+        public Player Clone()
+        {
+            Player Clone = new Player(this.Name, this.Pic, this.archetype);
+            Clone.Inventory = this.Inventory.Clone();
+            Clone.Inventory.SaveNames();
+            Clone.defense = this.defense;
+            Clone.damage = this.damage;
+            Clone.speed = this.speed;
+            Clone.dice = this.dice;
+            Clone.Health = this.Health;
+            Clone.MaxHealth = this.MaxHealth;
+            Clone.party = this.party;
+            return Clone;
         }
     }
 }

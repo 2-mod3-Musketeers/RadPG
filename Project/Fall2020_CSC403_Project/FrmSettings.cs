@@ -1,10 +1,12 @@
 ﻿using Fall2020_CSC403_Project.code;
+using Fall2020_CSC403_Project.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -58,18 +60,25 @@ namespace Fall2020_CSC403_Project
 
             if (this.previousForm.Name != "FrmMain")
             {
+                Button MainMenuButton = new Button();
+                MainMenuButton.Location = new Point((width / 3), (2 * height / 8));
+                MainMenuButton.Size = new Size(width / 3, height / 10);
+                MainMenuButton.Text = ("Main Menu");
+                MainMenuButton.Font = new Font("NSimSun", ReturnButton.Size.Height / 2);
+                MainMenuButton.Parent = this;
+                MainMenuButton.Click += MainMenuButton_Click;
+                MainMenuButton.TabIndex = 2;
 
                 Button SaveButton = new Button();
-                SaveButton.Location = new Point((width / 3), (2 * height / 8));
+                SaveButton.Location = new Point((width / 3), (3 * height / 8));
                 SaveButton.Size = new Size(width / 3, height / 10);
-                SaveButton.Text = ("Save");
+                SaveButton.Text = ("Save and Quit");
                 SaveButton.Font = new Font("NSimSun", ReturnButton.Size.Height / 2);
                 SaveButton.Parent = this;
                 SaveButton.Click += SaveButton_Click;
-                SaveButton.TabIndex = 2;
+                SaveButton.TabIndex = 3;
 
-                ExitButton.Location = new Point((width / 3), (3 * height / 8));
-                ExitButton.TabIndex = 3;
+                ExitButton.Dispose();
             }
         }
 
@@ -89,7 +98,27 @@ namespace Fall2020_CSC403_Project
         }
         private void SaveButton_Click(object sender, EventArgs e)
         {
+            Button SaveButton = (Button)sender;
+            SaveButton.Text = "   Saving...";
+            SaveButton.Refresh();
             level.Save();
+
+            SaveButton.Text = "Saved";
+
+            Application.Exit();
+        }
+
+        private void MainMenuButton_Click(object sender, EventArgs e)
+        {
+            FrmMain MainMenu = Application.OpenForms["FrmMain"] as FrmMain;
+
+            SoundPlayer mainMenuPlayer = new SoundPlayer(Resources.Mainmenu_audio);
+            mainMenuPlayer.PlayLooping();
+
+            Game.PopulateWorld();
+
+            MainMenu.Show();
+            this.Hide();
         }
 
 

@@ -20,7 +20,7 @@ namespace Fall2020_CSC403_Project.code
 
         public event Action<int> AttackEvent;
 
-		public Inventory Inventory { get; set; }
+        public Inventory Inventory;
 
 		public Archetype archetype;
 
@@ -34,75 +34,87 @@ namespace Fall2020_CSC403_Project.code
 
 		public Random dice;
 
-		public int Health { get; private set; }
-		public int MaxHealth { get; private set; }
+        public int Health;
+        public int MaxHealth;
 
 
 		public Character(string Name, PictureBox Pic, Archetype archetype) : base(Name, Pic)
 		{
+            Console.WriteLine(archetype);
 			if (archetype == null)
 			{
-				switch (this.archetypeName)
-				{
-					case "Tank":
-						this.archetype = new Tank();
-						break;
-					case "Rogue":
-                        this.archetype = new Rogue();
-                        break;
-                    case "Swordsman":
-                        this.archetype = new Swordsman();
-                        break;
-                    case "Healer":
-                        this.archetype = new Healer();
-                        break;
-                    case "Minion":
-                        this.archetype = new Minion();
-                        break;
-                    case "Coward":
-                        this.archetype = new Coward();
-                        break;
-                    case "Brute":
-                        this.archetype = new Brute();
-                        break;
-                    case "Zombie":
-                        this.archetype = new Zombie();
-                        break;
-                    case "Bees":
-                        this.archetype = new Bees();
-                        break;
-                    case "Mage":
-                        this.archetype = new Mage();
-                        break;
-                    case "Whelp":
-                        this.archetype = new Whelp();
-                        break;
-                    case "Boss":
-                        this.archetype = new Boss();
-                        break;
-                    case "Dragon":
-                        this.archetype = new Dragon();
-                        break;
-					default:
-						this.archetype = new Rogue();
-						break;
-                }
-
+                // sets the default archetype which gets changed later
+                this.archetype = new Rogue();
 			}
 			else
 			{
                 this.archetype = archetype;
-            }			
-			this.MaxHealth = this.archetype.baseMaxHealth;
+                this.Health = this.archetype.baseMaxHealth;
+            }
+
+            this.MaxHealth = this.archetype.baseMaxHealth;
+
             this.damage = this.archetype.baseDamage;
             this.defense = this.archetype.baseDefense;
             this.speed = this.archetype.baseSpeed;
-            this.Health = this.MaxHealth;
 			this.Inventory = new Inventory();
 			this.dice = new Random();
 			this.archetypeName = this.archetype.name;
 
 		}
+
+        public void RecreateArchetype()
+        {
+            switch (this.archetypeName)
+            {
+                case "Tank":
+                    this.archetype = new Tank();
+                    break;
+                case "Rogue":
+                    this.archetype = new Rogue();
+                    break;
+                case "Swordsman":
+                    this.archetype = new Swordsman();
+                    break;
+                case "Healer":
+                    this.archetype = new Healer();
+                    break;
+                case "Minion":
+                    this.archetype = new Minion();
+                    break;
+                case "Coward":
+                    this.archetype = new Coward();
+                    break;
+                case "Brute":
+                    this.archetype = new Brute();
+                    break;
+                case "Zombie":
+                    this.archetype = new Zombie();
+                    break;
+                case "Bees":
+                    this.archetype = new Bees();
+                    break;
+                case "Mage":
+                    this.archetype = new Mage();
+                    break;
+                case "Whelp":
+                    this.archetype = new Whelp();
+                    break;
+                case "Boss":
+                    this.archetype = new Boss();
+                    break;
+                case "Dragon":
+                    this.archetype = new Dragon();
+                    break;
+                default:
+                    this.archetype = new Rogue();
+                    break;
+            }
+
+            this.ImageFilepath = string.Format("../../data/Pictures/{0}.png", this.archetype.name);
+
+            this.Pic.Image = Image.FromFile(ImageFilepath);
+        }
 		
 		public string OnAttack(int defense)
 		{
