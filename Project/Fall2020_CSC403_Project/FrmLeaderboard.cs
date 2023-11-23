@@ -11,6 +11,7 @@ using System.IO;
 using System.Text.Json;
 using System.Xml.Schema;
 using Fall2020_CSC403_Project.Properties;
+using Fall2020_CSC403_Project.code;
 
 namespace Fall2020_CSC403_Project
 {
@@ -242,35 +243,22 @@ namespace Fall2020_CSC403_Project
                     break;
             }
 
-            switch (weaponType)
+
+            if (weaponType != null)
             {
-                case "Sting":
-                    Weapon.Image = Resources.common_dagger;
-                    break;
-                default:
-                    break;
+                Weapon.Image = Game.Items[weaponType].Pic.Image;
+
+            }
+            if (armorType != null)
+            {
+                Armor.Image = Game.Items[armorType].Pic.Image;
             }
 
-            switch (armorType)
+            if (utilityType != null)
             {
-                case "Armor of Noob":
-                    Armor.Image = Resources.common_armor;
-                    break;
-                default:
-                    break;
+                Utility.Image = Game.Items[utilityType].Pic.Image;
             }
 
-            switch (utilityType)
-            {
-                case "Lesser Heal":
-                    Utility.Image = Resources.lesser_health_potion;
-                    break;
-                case "Potion of Speed":
-                    Utility.Image = Resources.speed_potion;
-                    break;
-                default:
-                    break;
-            }
         }
 
         private void HidePlaythroughInfo()

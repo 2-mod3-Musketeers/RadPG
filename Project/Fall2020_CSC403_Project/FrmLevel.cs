@@ -1154,8 +1154,8 @@ namespace Fall2020_CSC403_Project
             Game.CurrentArea.AddNPC(Game.NPCs["Bobby"]);
             Game.CurrentArea.AddNPC(Game.NPCs["Eugene"]);
 
-            Game.CurrentArea.AddItem(Game.Items["Strength Potion"]);
-            Game.CurrentArea.AddItem(Game.Items["Greater Health Potion"]);
+            Game.CurrentArea.AddItem(Game.Items["Potion of Strength"]);
+            Game.CurrentArea.AddItem(Game.Items["Large Health Potion"]);
 
         }
 
@@ -1230,7 +1230,7 @@ namespace Fall2020_CSC403_Project
 
 
             Game.CurrentArea.AddItem(Game.Items["Sting"]);
-            Game.CurrentArea.AddItem(Game.Items["Lesser Health Potion"]);
+            Game.CurrentArea.AddItem(Game.Items["Small Health Potion"]);
 
 
             Game.CurrentArea.AddEnemy(Game.Enemies["Minion1"]);
@@ -1267,9 +1267,9 @@ namespace Fall2020_CSC403_Project
 
 
             Game.CurrentArea.AddItem(Game.Items["Shabby Armor"]);
-            Game.CurrentArea.AddItem(Game.Items["Speed Potion"]);
+            Game.CurrentArea.AddItem(Game.Items["Potion of Speed"]);
             
-            Game.CurrentArea.AddItem(Game.Items["Lumberjack Axe"]);
+            Game.CurrentArea.AddItem(Game.Items["Lumberjack's Axe"]);
             Game.CurrentArea.AddItem(Game.Items["Thalian Sword"]);
             Game.CurrentArea.AddItem(Game.Items["Dagger of Mischief"]);
 
@@ -1294,9 +1294,9 @@ namespace Fall2020_CSC403_Project
             Game.CurrentArea.AddEnemy(Game.Enemies["Brute2"]);
             Game.CurrentArea.AddEnemy(Game.Enemies["Minion5"]);
 
-            Game.CurrentArea.AddItem(Game.Items["Accuracy Potion"]);
+            Game.CurrentArea.AddItem(Game.Items["Potion of Accuracy"]);
             Game.CurrentArea.AddItem(Game.Items["Rusty Sword"]);
-            Game.CurrentArea.AddItem(Game.Items["Carpenter Hammer"]);
+            Game.CurrentArea.AddItem(Game.Items["Carpenter's Hammer"]);
 
         }
 
@@ -1318,7 +1318,7 @@ namespace Fall2020_CSC403_Project
             Game.CurrentArea.AddEnemy(Game.Enemies["Lizard Wizard3"]);
             Game.CurrentArea.AddEnemy(Game.Enemies["Lizard Wizard4"]);
 
-            Game.CurrentArea.AddItem(Game.Items["Speed Potion"]);
+            Game.CurrentArea.AddItem(Game.Items["Potion of Speed"]);
 
         }
 

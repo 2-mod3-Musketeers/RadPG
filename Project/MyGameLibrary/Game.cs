@@ -56,7 +56,7 @@ namespace Fall2020_CSC403_Project.code
                 5, Item.ItemType.Armor,
                 "This armor looks thin and flexible. Putting it on, there seems to be a gap in the armor along the spine. Since when did people have ridges on their back?");
 
-            Items["Speed Potion"] = new Item(
+            Items["Potion of Speed"] = new Item(
                 "Potion of Speed",
                 MakePictureBox(Resources.speed_potion, new Point(Screen.PrimaryScreen.Bounds.Width * 5 / 8, Terrain.TileSize.Width * 3), itemSize),
                 10,
@@ -64,7 +64,7 @@ namespace Fall2020_CSC403_Project.code
                 Item.EffectType.Speed,
                 "This bottle acts unnatural as a simple tremor will cause the liquid inside to splash about the bottle. What was Marissa thinking when she made this one?");
 
-            Items["Lesser Health Potion"] = new Item(
+            Items["Small Health Potion"] = new Item(
                 "Small Health Potion",
                 MakePictureBox(Resources.lesser_health_potion, new Point(20, 400), itemSize),
                 5,
@@ -72,7 +72,7 @@ namespace Fall2020_CSC403_Project.code
                 Item.EffectType.Healing,
                 "This small bottle holds a liquid that swirls with crimson liquid. A brand on the cork bears the logo of Marissa's Cauldron");
 
-            Items["Strength Potion"] = new Item(
+            Items["Potion of Strength"] = new Item(
                 "Potion of Strength",
                 MakePictureBox(Resources.strength_potion, new Point(Screen.PrimaryScreen.Bounds.Width - Terrain.TileSize.Width * 6, Terrain.TileSize.Width * 5), itemSize),
                 5,
@@ -80,7 +80,7 @@ namespace Fall2020_CSC403_Project.code
                 Item.EffectType.Strength,
                 "The orange liquid inside has a consistency thicker than honey. It looks safe, but you don't trust drinking anything made by Marissa's Rival.");
 
-            Items["Carpenter Hammer"] = new Item(
+            Items["Carpenter's Hammer"] = new Item(
                 "Carptener's Hammer",
                 MakePictureBox(Resources.common_hammer, new Point(700, 600), itemSize),
                 5,
@@ -88,7 +88,7 @@ namespace Fall2020_CSC403_Project.code
                 Item.WeaponType.War,
                 "This hammer has a sturdy handle and a large head. Must have been used to build houses in a nearby village.");
 
-            Items["Lumberjack Axe"] = new Item(
+            Items["Lumberjack's Axe"] = new Item(
                 "Lumberjack's Axe",
                 MakePictureBox(Resources.common_axe, new Point(Screen.PrimaryScreen.Bounds.Width / 2 + 30, Screen.PrimaryScreen.Bounds.Height / 2 + 10), itemSize),
                 10,
@@ -113,7 +113,7 @@ namespace Fall2020_CSC403_Project.code
                 "The blade seems to hum in your hand as you feel the strength of the sword. On the pommel is the Thalia Family seal.");
 
            
-            Items["Accuracy Potion"] = new Item(
+            Items["Potion of Accuracy"] = new Item(
                 "Potion of Accuracy",
                 MakePictureBox(Resources.accuracy_potion, new Point(Terrain.TileSize.Width * 5, Terrain.TileSize.Width * 8), itemSize),
                 3,
@@ -121,7 +121,7 @@ namespace Fall2020_CSC403_Project.code
                 Item.EffectType.Accuracy,
                 "This liquid seems rigid in this bottle. The cork on top indicates to you that the Allegiance uses this potion as standard issue.");
 
-            Items["Greater Health Potion"] = new Item(
+            Items["Large Health Potion"] = new Item(
                 "Greather Health Potion",
                 MakePictureBox(Resources.greather_health_potion, new Point(Terrain.TileSize.Width * 10, Terrain.TileSize.Width * 15), itemSize),
                 15,

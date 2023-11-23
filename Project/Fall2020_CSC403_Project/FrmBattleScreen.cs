@@ -800,6 +800,18 @@ namespace Fall2020_CSC403_Project
             frmLevel.UpdateHealthBars(frmLevel.playerCurrentHealth);
             frmLevel.fighting = false;
             AddToLog(enemy.OnAttack(player));
+            foreach (NPC npc in player.Party)
+            {
+                if (npc == null)
+                {
+                    continue;
+                }
+
+                if (npc.Health <= 0)
+                {
+                    player.removePartyMember(npc);
+                }
+            }
             if (player.Health <= 0)
             {
                 AddToLog(enemy.Name + " defeated " + player.Name + "!");
@@ -834,6 +846,20 @@ namespace Fall2020_CSC403_Project
 
                 RotateOrder();
                 UpdateHealthBars();
+
+                foreach (NPC npc in player.Party)
+                {
+                    if (npc == null)
+                    {
+                        continue;
+                    }
+
+                    if (npc.Health <= 0)
+                    {
+                        player.removePartyMember(npc);
+                        attackOrder.Remove(npc);
+                    }
+                }
 
                 if (player.Health <= 0)
                 {

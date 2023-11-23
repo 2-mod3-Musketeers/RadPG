@@ -53,5 +53,29 @@ namespace Fall2020_CSC403_Project.code {
                 }
             }
         }
+
+        public void removePartyMember(NPC member)
+        {
+            for (int i = 0; i < Party.Length; i++)
+            {
+                if (Party[i] == member)
+                {
+                    removePartyMember(i);
+                    return;
+                }
+            }
+        }
+
+        public void removePartyMember(int index)
+        {
+            for (int i = 0; i < Party.Length - 1; i ++)
+            {
+                if (i >= index)
+                {
+                    Party[i] = Party[i + 1];
+                }
+            }
+            Party[Party.Length - 1] = null;
+        }
     }
 }

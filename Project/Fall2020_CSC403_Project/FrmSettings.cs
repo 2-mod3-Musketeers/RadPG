@@ -40,8 +40,8 @@ namespace Fall2020_CSC403_Project
             Button FAQButton = new Button();
 
             ReturnButton.Location = new Point((width / 3), (height / 8));
-            ExitButton.Location = new Point((width / 3), (2 * height / 8));
-            FAQButton.Location = new Point((width / 3), (3 * height / 8));
+            ExitButton.Location = new Point((width / 3), (3 * height / 8));
+            FAQButton.Location = new Point((width / 3), (2 * height / 8));
 
             ReturnButton.Size = new Size(width / 3, height / 10);
             ExitButton.Size = new Size(width / 3, height / 10);

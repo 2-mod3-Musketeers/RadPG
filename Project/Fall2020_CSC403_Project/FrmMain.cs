@@ -45,8 +45,8 @@ namespace Fall2020_CSC403_Project
             Button ExitButton = new Button();
 
             StartButton.Location = new Point(0 + (width / 18), 0 + ((4 * height) / 9));
-            SettingsButton.Location = new Point(0 + (width / 18), 0 + ((5 * height) / 9));
-            LeaderboardButton.Location = new Point(0 + (width / 18), 0 + (6 * height / 9));
+            LeaderboardButton.Location = new Point(0 + (width / 18), 0 + (5 * height / 9));
+            SettingsButton.Location = new Point(0 + (width / 18), 0 + ((6 * height) / 9));
             ExitButton.Location = new Point(0 + (width / 18), 0 + (7 * height / 9));
             
 
